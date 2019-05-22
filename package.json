@@ -24,6 +24,14 @@
     "@babel/preset-env": "^7.3.1",
     "eslint": "^5.13.0",
     "eslint-plugin-import": "^2.16.0",
-    "nodemon": "^1.18.9"
+    "husky": "^2.3.0",
+    "nodemon": "^1.18.9",
+    "prettier": "1.17.1",
+    "pretty-quick": "^1.11.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }
