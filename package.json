@@ -8,7 +8,8 @@
     "prod": "npm run build && NODE_ENV=production node ./dist/bin/www",
     "build": "npm run clean && babel ./src --out-dir dist",
     "clean": "rimraf dist",
-    "watch": "nodemon --config ./nodemon.json --"
+    "watch": "nodemon --config ./nodemon.json --",
+    "docs": "./node_modules/.bin/esdoc && xdg-open ./docs/index.html &"
   },
   "dependencies": {
     "cookie-parser": "~1.4.3",
