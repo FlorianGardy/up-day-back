@@ -2,7 +2,7 @@ Projet KINE
 
 # Description
 
-...
+Gestion back-end de l'application KinePeace
 
 # Commands list
 
@@ -10,10 +10,10 @@ Projet KINE
 
 \$ npm run docs
 
-### Pour lancer le run
+### Pour lancer l'application en developpement
 
-\$ npm run dev
+\$ npm start
 
 ### Pour lancer en prod
 
-\$ npm run start
+\$ npm run prod
