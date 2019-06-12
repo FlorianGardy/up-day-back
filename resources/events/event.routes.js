@@ -19,5 +19,23 @@ module.exports = [
         }
       });
     }
+  },
+  {
+    method: "POST",
+    path: "/events",
+    handler: function(request) {
+      const event = {
+        date: request.payload.date,
+        type: request.payload.type,
+        nature: request.payload.nature,
+        volume: request.payload.volume,
+        context: request.payload.context,
+        comment: request.payload.comment,
+        user_id: request.payload.user_id
+      };
+      if (typeof event !== "undefined") {
+        return Event.create(event);
+      }
+    }
   }
 ];

@@ -13,6 +13,35 @@ describe("# Events", () => {
     await server.stop();
   });
 
+  describe("## POST /events", () => {
+    it("responds with 500 when no datas are send", async () => {
+      const res = await server.inject({
+        method: "POST",
+        url: "/events",
+        payload: {}
+      });
+      should(res.statusCode).equal(500);
+    });
+
+    it("responds with 200 and data when send", async () => {
+      const res = await server.inject({
+        method: "POST",
+        url: "/events",
+        payload: {
+          date: "2019-06-04T12:59:00.000Z",
+          type: "pipi",
+          nature: "normale",
+          volume: "+++",
+          context: "fuite",
+          comment: "pipi",
+          user_id: "10"
+        }
+      });
+      should(res.statusCode).equal(200);
+      should.exist(res.payload);
+    });
+  });
+
   describe("## GET /events/userId", () => {
     it("responds with 200", async () => {
       const res = await server.inject({
