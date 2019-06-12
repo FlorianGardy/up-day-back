@@ -1,0 +1,23 @@
+{
+  "name": "biarritz_0319_kine_back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@hapi/hapi": "^18.3.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WildCodeSchool/biarritz_0319_kine_back.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WildCodeSchool/biarritz_0319_kine_back/issues"
+  },
+  "homepage": "https://github.com/WildCodeSchool/biarritz_0319_kine_back#readme"
+}
