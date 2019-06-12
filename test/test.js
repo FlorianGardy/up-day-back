@@ -23,7 +23,7 @@ describe("# Events", () => {
       should(res.statusCode).equal(500);
     });
 
-    it("responds with 200 and data when send", async () => {
+    it("responds with 200 and data when datas send", async () => {
       const res = await server.inject({
         method: "POST",
         url: "/events",
@@ -39,6 +39,27 @@ describe("# Events", () => {
       });
       should(res.statusCode).equal(200);
       should.exist(res.payload);
+    });
+
+    it("datas exist in db when sended", async () => {
+      const event = {
+        date: "2019-06-04T12:59:00.000Z",
+        type: "pipi",
+        nature: "normale",
+        volume: "+++",
+        context: "fuite",
+        comment: "pipi",
+        user_id: "1"
+      };
+      const res = await server.inject({
+        method: "POST",
+        url: "/events",
+        payload: event
+      });
+      await Event.create(event);
+      should(res.statusCode).equal(200);
+      const payload = JSON.parse(res.payload);
+      should(payload).match(event);
     });
   });
 
