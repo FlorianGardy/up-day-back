@@ -1,7 +1,6 @@
 "use strict";
 
 const Hapi = require("@hapi/hapi");
-const connect = require("./db/connect");
 
 const server = Hapi.server({
   port: 3000,

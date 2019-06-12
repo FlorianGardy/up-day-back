@@ -20,6 +20,7 @@
     "should": "^13.2.3"
   },
   "scripts": {
+    "start": "node index.js",
     "test": "mocha",
     "docs": "./node_modules/.bin/esdoc && xdg-open ./docs/index.html &"
   },
