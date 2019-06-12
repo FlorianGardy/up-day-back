@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "@hapi/hapi": "^18.3.1"
+    "@hapi/hapi": "^18.3.1",
+    "esdoc": "^1.1.0",
+    "esdoc-standard-plugin": "^1.0.0"
   },
   "devDependencies": {
     "husky": "^2.4.1",
@@ -13,7 +15,8 @@
     "pretty-quick": "^1.11.0"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "docs": "./node_modules/.bin/esdoc && xdg-open ./docs/index.html &"
   },
   "repository": {
     "type": "git",
