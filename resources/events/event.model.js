@@ -30,7 +30,7 @@ const Event = sequelize.define(
       allowNull: true
     },
     user_id: {
-      type: Sequelize.NUMBER,
+      type: Sequelize.NUMERIC,
       allowNull: false
     }
   },
