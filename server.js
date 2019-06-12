@@ -1,11 +1,15 @@
 "use strict";
 require("dotenv").config();
 
+var cors = require("cors");
 const Hapi = require("@hapi/hapi");
 
 const server = Hapi.server({
   port: process.env.S_PORT,
-  host: process.env.S_HOST
+  host: process.env.S_HOST,
+  routes: {
+    cors: true
+  }
 });
 
 server.route(require("./resources/events/event.routes"));
