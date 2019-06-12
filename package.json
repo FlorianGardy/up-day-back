@@ -7,7 +7,10 @@
     "@hapi/hapi": "^18.3.1",
     "dotenv": "^8.0.0",
     "esdoc": "^1.1.0",
-    "esdoc-standard-plugin": "^1.0.0"
+    "esdoc-standard-plugin": "^1.0.0",
+    "pg": "^7.11.0",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.8.9"
   },
   "devDependencies": {
     "husky": "^2.4.1",
