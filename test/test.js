@@ -56,7 +56,6 @@ describe("# Events", () => {
         url: "/events",
         payload: event
       });
-      await Event.create(event);
       should(res.statusCode).equal(200);
       const payload = JSON.parse(res.payload);
       should(payload).match(event);
