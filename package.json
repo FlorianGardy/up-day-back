@@ -38,8 +38,7 @@
   "homepage": "https://github.com/WildCodeSchool/biarritz_0319_kine_back#readme",
   "husky": {
     "hooks": {
-      "pre-commit": "npm test && pretty-quick --staged",
-      "pre-push": "npm test"
+      "pre-commit": "pretty-quick --staged && npm test"
     }
   }
 }
