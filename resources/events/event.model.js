@@ -5,6 +5,11 @@ const Event = sequelize.define(
   "event",
   {
     // attributes
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
     date: {
       type: Sequelize.DATE,
       allowNull: false
