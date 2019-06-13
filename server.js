@@ -13,6 +13,7 @@ const server = Hapi.server({
 });
 
 server.route(require("./resources/events/event.routes"));
+server.route(require("./resources/users/user.routes"));
 
 exports.init = async () => {
   const sequelize = require("./db/connect");
