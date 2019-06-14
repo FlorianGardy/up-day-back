@@ -5,8 +5,8 @@ var cors = require("cors");
 const Hapi = require("@hapi/hapi");
 
 const server = Hapi.server({
-  port: process.env.S_PORT,
-  host: process.env.S_HOST,
+  port: 3030,
+  host: "localhost",
   routes: {
     cors: true
   }
