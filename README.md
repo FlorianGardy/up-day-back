@@ -2,7 +2,7 @@ Projet KINE
 
 # .env
 
-Fichier .env requit. :
+Fichier .env requit :
 
 ```
 # Database infos

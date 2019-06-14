@@ -34,7 +34,7 @@ describe("# Events", () => {
           volume: "+++",
           context: "fuite",
           comment: "pipi",
-          user_id: "10"
+          userId: null
         }
       });
       should(res.statusCode).equal(200);
@@ -49,7 +49,7 @@ describe("# Events", () => {
         volume: "+++",
         context: "fuite",
         comment: "pipi",
-        user_id: "1"
+        userId: null
       };
       const res = await server.inject({
         method: "POST",
@@ -71,14 +71,12 @@ describe("# Events", () => {
       should(res.statusCode).equal(200);
     });
 
-    it("return an empty array if given user id doesnt exist", async () => {
+    it("return 500 if given user id doesnt exist", async () => {
       const res = await server.inject({
         method: "GET",
         url: "/events/9999999999"
       });
-      should(res.statusCode).equal(200);
-      const payload = JSON.parse(res.payload);
-      should(payload).match([]);
+      should(res.statusCode).equal(500);
     });
 
     it("return an array with events for the given user id", async () => {
@@ -89,7 +87,7 @@ describe("# Events", () => {
         volume: "+++",
         context: "fuite",
         comment: "pipi",
-        user_id: "1"
+        userId: 1
       };
 
       const event2 = {
@@ -99,7 +97,7 @@ describe("# Events", () => {
         volume: "+++",
         context: "fuite",
         comment: "pipi",
-        user_id: "1"
+        userId: 1
       };
       await Event.create(event1);
       await Event.create(event2);
@@ -139,7 +137,7 @@ describe("# Events", () => {
         volume: "+++",
         context: "fuite",
         comment: "pipi",
-        user_id: "1"
+        userId: null
       };
       const event2 = {
         date: "2019-06-05T13:59:00.000Z",
@@ -148,7 +146,7 @@ describe("# Events", () => {
         volume: "+",
         context: "normale",
         comment: "gros pipi",
-        user_id: "1"
+        userId: null
       };
       await Event.create(event1);
       await Event.create(event2);

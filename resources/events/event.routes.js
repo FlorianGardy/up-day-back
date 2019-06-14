@@ -15,7 +15,7 @@ module.exports = [
       const userId = request.params.id;
       return Event.findAll({
         where: {
-          user_id: userId
+          userId: userId
         }
       });
     }
