@@ -1,7 +1,12 @@
 const Sequelize = require("sequelize");
 
+let dbName = process.env.DB_NAME;
+if (process.env.NODE_ENV === "test") {
+  dbName = process.env.DB_TEST;
+}
+
 module.exports = new Sequelize(
-  process.env.DB_NAME,
+  dbName,
   process.env.DB_USER,
   process.env.DB_PASS,
   {

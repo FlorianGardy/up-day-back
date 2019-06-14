@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start": "nodemon index.js",
-    "test": "mocha",
+    "test": "NODE_ENV=test mocha",
     "docs": "./node_modules/.bin/esdoc && xdg-open ./docs/index.html &"
   },
   "repository": {
