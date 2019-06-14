@@ -1,40 +1,44 @@
 {
-  "name": "express-es6-sample",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "start": "NODE_ENV=development npm run watch ./src/bin/www",
-    "prod": "npm run build && NODE_ENV=production node ./dist/bin/www",
-    "build": "npm run clean && babel ./src --out-dir dist",
-    "clean": "rimraf dist",
-    "watch": "nodemon --config ./nodemon.json --",
-    "docs": "./node_modules/.bin/esdoc && xdg-open ./docs/index.html &"
-  },
+  "name": "biarritz_0319_kine_back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "dependencies": {
-    "cookie-parser": "~1.4.3",
-    "debug": "~2.6.9",
-    "express": "~4.16.0",
-    "morgan": "^1.9.1",
-    "rimraf": "^2.6.3"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.2.2",
-    "@babel/node": "^7.2.2",
-    "@babel/preset-env": "^7.3.1",
+    "@hapi/hapi": "^18.3.1",
+    "cors": "^2.8.5",
+    "dotenv": "^8.0.0",
     "esdoc": "^1.1.0",
     "esdoc-standard-plugin": "^1.0.0",
-    "eslint": "^5.13.0",
-    "eslint-plugin-import": "^2.16.0",
-    "husky": "^2.3.0",
-    "mocha": "^6.1.4",
-    "nodemon": "^1.18.9",
-    "prettier": "1.17.1",
-    "pretty-quick": "^1.11.0"
+    "pg": "^7.11.0",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.8.9"
   },
+  "devDependencies": {
+    "husky": "^2.4.1",
+    "mocha": "^6.1.4",
+    "nodemon": "^1.19.1",
+    "prettier": "^1.18.2",
+    "pretty-quick": "^1.11.0",
+    "should": "^13.2.3"
+  },
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "mocha",
+    "docs": "./node_modules/.bin/esdoc && xdg-open ./docs/index.html &"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WildCodeSchool/biarritz_0319_kine_back.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WildCodeSchool/biarritz_0319_kine_back/issues"
+  },
+  "homepage": "https://github.com/WildCodeSchool/biarritz_0319_kine_back#readme",
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "pretty-quick --staged && npm test"
     }
   }
 }
