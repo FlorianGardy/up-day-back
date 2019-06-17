@@ -28,7 +28,7 @@ const Event = sequelize.define(
       allowNull: false
     },
     context: {
-      type: Sequelize.STRING,
+      type: Sequelize.ARRAY(Sequelize.JSON),
       allowNull: true
     },
     comment: {

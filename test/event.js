@@ -32,7 +32,7 @@ describe("# Events", () => {
           type: "pipi",
           nature: "normale",
           volume: "+++",
-          context: "fuite",
+          context: [{ value: "fuite", checked: true }],
           comment: "pipi",
           userId: null
         }
@@ -47,7 +47,7 @@ describe("# Events", () => {
         type: "pipi",
         nature: "normale",
         volume: "+++",
-        context: "fuite",
+        context: [{ value: "fuite", checked: true }],
         comment: "pipi",
         userId: null
       };
@@ -71,12 +71,14 @@ describe("# Events", () => {
       should(res.statusCode).equal(200);
     });
 
-    it("return 500 if given user id doesnt exist", async () => {
+    it("return empty array if given user id doesnt exist", async () => {
       const res = await server.inject({
         method: "GET",
-        url: "/events/9999999999"
+        url: "/events/9999"
       });
-      should(res.statusCode).equal(500);
+      should(res.statusCode).equal(200);
+      const payload = JSON.parse(res.payload);
+      should(payload).match([]);
     });
 
     it("return an array with events for the given user id", async () => {
@@ -85,7 +87,7 @@ describe("# Events", () => {
         type: "pipi",
         nature: "normale",
         volume: "+++",
-        context: "fuite",
+        context: [{ value: "fuite", checked: true }],
         comment: "pipi",
         userId: 1
       };
@@ -95,7 +97,7 @@ describe("# Events", () => {
         type: "pipi",
         nature: "normale",
         volume: "+++",
-        context: "fuite",
+        context: [{ value: "fuite", checked: true }],
         comment: "pipi",
         userId: 1
       };
@@ -135,7 +137,7 @@ describe("# Events", () => {
         type: "pipi",
         nature: "normale",
         volume: "+++",
-        context: "fuite",
+        context: [{ value: "fuite", checked: true }],
         comment: "pipi",
         userId: null
       };
@@ -144,7 +146,7 @@ describe("# Events", () => {
         type: "pipi",
         nature: "mitigé",
         volume: "+",
-        context: "normale",
+        context: [{ value: "fuite", checked: true }],
         comment: "gros pipi",
         userId: null
       };
