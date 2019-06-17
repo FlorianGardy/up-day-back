@@ -32,9 +32,9 @@ describe("# Events", () => {
           type: "pipi",
           nature: "normale",
           volume: "+++",
-          context: "fuite",
+          context: [{ value: "fuite", checked: true }],
           comment: "pipi",
-          user_id: "10"
+          userId: null
         }
       });
       should(res.statusCode).equal(200);
@@ -47,16 +47,15 @@ describe("# Events", () => {
         type: "pipi",
         nature: "normale",
         volume: "+++",
-        context: "fuite",
+        context: [{ value: "fuite", checked: true }],
         comment: "pipi",
-        user_id: "1"
+        userId: null
       };
       const res = await server.inject({
         method: "POST",
         url: "/events",
         payload: event
       });
-      await Event.create(event);
       should(res.statusCode).equal(200);
       const payload = JSON.parse(res.payload);
       should(payload).match(event);
@@ -72,10 +71,10 @@ describe("# Events", () => {
       should(res.statusCode).equal(200);
     });
 
-    it("return an empty array if given user id doesnt exist", async () => {
+    it("return empty array if given user id doesnt exist", async () => {
       const res = await server.inject({
         method: "GET",
-        url: "/events/9999999999"
+        url: "/events/9999"
       });
       should(res.statusCode).equal(200);
       const payload = JSON.parse(res.payload);
@@ -88,9 +87,9 @@ describe("# Events", () => {
         type: "pipi",
         nature: "normale",
         volume: "+++",
-        context: "fuite",
+        context: [{ value: "fuite", checked: true }],
         comment: "pipi",
-        user_id: "1"
+        userId: 1
       };
 
       const event2 = {
@@ -98,9 +97,9 @@ describe("# Events", () => {
         type: "pipi",
         nature: "normale",
         volume: "+++",
-        context: "fuite",
+        context: [{ value: "fuite", checked: true }],
         comment: "pipi",
-        user_id: "1"
+        userId: 1
       };
       await Event.create(event1);
       await Event.create(event2);
@@ -138,18 +137,18 @@ describe("# Events", () => {
         type: "pipi",
         nature: "normale",
         volume: "+++",
-        context: "fuite",
+        context: [{ value: "fuite", checked: true }],
         comment: "pipi",
-        user_id: "1"
+        userId: null
       };
       const event2 = {
         date: "2019-06-05T13:59:00.000Z",
         type: "pipi",
         nature: "mitigé",
         volume: "+",
-        context: "normale",
+        context: [{ value: "fuite", checked: true }],
         comment: "gros pipi",
-        user_id: "1"
+        userId: null
       };
       await Event.create(event1);
       await Event.create(event2);

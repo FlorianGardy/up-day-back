@@ -1,10 +1,16 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../../db/connect");
+const User = require("../users/user.model");
 
 const Event = sequelize.define(
   "event",
   {
     // attributes
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
     date: {
       type: Sequelize.DATE,
       allowNull: false
@@ -22,21 +28,30 @@ const Event = sequelize.define(
       allowNull: false
     },
     context: {
-      type: Sequelize.STRING,
+      type: Sequelize.ARRAY(Sequelize.JSON),
       allowNull: true
     },
     comment: {
       type: Sequelize.STRING,
       allowNull: true
     },
-    user_id: {
-      type: Sequelize.NUMERIC,
-      allowNull: false
+    userId: {
+      type: Sequelize.INTEGER,
+      allowNull: true
     }
   },
   {
     // options
   }
 );
+
+User.hasMany(Event, {
+  foreignKey: "userId",
+  constraints: false
+});
+Event.belongsTo(User, {
+  // foreignKey: 'ingredientId',
+  constraints: false
+});
 
 module.exports = Event;

@@ -5,7 +5,7 @@ module.exports = [
     method: "GET",
     path: "/events",
     handler: function() {
-      return Event.findAll();
+      return Event.findAll().catch(err => console.log(err));
     }
   },
   {
@@ -15,9 +15,9 @@ module.exports = [
       const userId = request.params.id;
       return Event.findAll({
         where: {
-          user_id: userId
+          userId: userId
         }
-      });
+      }).catch(err => console.log(err));
     }
   },
   {
@@ -31,10 +31,10 @@ module.exports = [
         volume: request.payload.volume,
         context: request.payload.context,
         comment: request.payload.comment,
-        user_id: request.payload.user_id
+        userId: request.payload.userId
       };
       if (typeof event !== "undefined") {
-        return Event.create(event);
+        return Event.create(event).catch(err => console.log(err));
       }
     }
   }
