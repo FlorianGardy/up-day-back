@@ -13,6 +13,12 @@ module.exports = new Sequelize(
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: "postgres",
-    logging: false // Turn off Console logs
+    logging: true, // Turn off Console logs
+    ssl: true,
+    dialectOptions: {
+      ssl: {
+        require: true
+      }
+    }
   }
 );
