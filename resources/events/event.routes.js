@@ -5,7 +5,7 @@ module.exports = [
     method: "GET",
     path: "/events",
     handler: function() {
-      return Event.findAll();
+      return Event.findAll().catch(err => console.log(err));
     }
   },
   {
@@ -17,7 +17,7 @@ module.exports = [
         where: {
           userId: userId
         }
-      });
+      }).catch(err => console.log(err));
     }
   },
   {
@@ -34,7 +34,7 @@ module.exports = [
         userId: request.payload.userId
       };
       if (typeof event !== "undefined") {
-        return Event.create(event);
+        return Event.create(event).catch(err => console.log(err));
       }
     }
   }
