@@ -11,14 +11,23 @@ module.exports = [
   },
   {
     method: "GET",
-    path: "/events/{id}",
+    path: "/events/{userId}",
     handler: function(request) {
-      const userId = request.params.id;
+      const userId = request.params.userId;
       return Event.findAll({
         where: {
           userId: userId
         }
       }).catch(err => console.log(err));
+    },
+    options: {
+      validate: {
+        params: {
+          userId: Joi.number()
+            .integer()
+            .required()
+        }
+      }
     }
   },
   {
@@ -34,8 +43,21 @@ module.exports = [
         comment: request.payload.comment,
         userId: request.payload.userId
       };
-      if (typeof event !== "undefined") {
-        return Event.create(event).catch(err => console.log(err));
+      return Event.create(event).catch(err => console.log(err));
+    },
+    options: {
+      validate: {
+        payload: {
+          date: Joi.date().required(),
+          type: Joi.string().required(),
+          nature: Joi.string().required(),
+          volume: Joi.string().required(),
+          context: Joi.array().items(Joi.string()),
+          comment: Joi.string(),
+          userId: Joi.number()
+            .integer()
+            .required()
+        }
       }
     }
   }
