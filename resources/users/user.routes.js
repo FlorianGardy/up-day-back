@@ -1,4 +1,5 @@
 const User = require("./user.model");
+const Joi = require("@hapi/joi");
 
 module.exports = [
   {

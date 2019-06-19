@@ -1,4 +1,5 @@
 const Event = require("./event.model");
+const Joi = require("@hapi/joi");
 
 module.exports = [
   {
