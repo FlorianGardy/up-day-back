@@ -33,7 +33,7 @@ module.exports = [
   {
     method: "POST",
     path: "/events",
-    handler: function(request) {
+    handler: function(request, h) {
       const event = {
         date: request.payload.date,
         type: request.payload.type,
@@ -44,21 +44,6 @@ module.exports = [
         userId: request.payload.userId
       };
       return Event.create(event).catch(err => console.log(err));
-    },
-    options: {
-      validate: {
-        payload: {
-          date: Joi.date().required(),
-          type: Joi.string().required(),
-          nature: Joi.string().required(),
-          volume: Joi.string().required(),
-          context: Joi.array().items(Joi.string()),
-          comment: Joi.string(),
-          userId: Joi.number()
-            .integer()
-            .required()
-        }
-      }
     }
   }
 ];

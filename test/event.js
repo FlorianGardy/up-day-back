@@ -121,13 +121,13 @@ describe("# Events", () => {
   });
 
   describe("## POST /events", () => {
-    it("returns the code 400 if no payload is provided", async () => {
+    it("returns the code 500 if no payload is provided", async () => {
       const res = await server.inject({
         method: "POST",
         url: "/events",
         payload: {}
       });
-      should(res.statusCode).equal(400);
+      should(res.statusCode).equal(500);
     });
 
     it("responds with 200 and sends the payload back if the payload is properly populated", async () => {
