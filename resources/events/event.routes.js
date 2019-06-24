@@ -34,16 +34,7 @@ module.exports = [
     method: "POST",
     path: "/events",
     handler: function(request, h) {
-      const event = {
-        date: request.payload.date,
-        type: request.payload.type,
-        nature: request.payload.nature,
-        volume: request.payload.volume,
-        context: request.payload.context,
-        comment: request.payload.comment,
-        userId: request.payload.userId
-      };
-      return Event.create(event).catch(err => console.log(err));
+      return Event.create(request.payload).catch(err => console.log(err));
     }
   }
 ];

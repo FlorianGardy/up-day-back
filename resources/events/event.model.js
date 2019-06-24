@@ -37,7 +37,7 @@ const Event = sequelize.define(
     },
     userId: {
       type: Sequelize.INTEGER,
-      allowNull: true
+      allowNull: false
     }
   },
   {
