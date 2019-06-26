@@ -1,6 +1,6 @@
 const should = require("should");
 const { init } = require("../server");
-const Event = require("../resources/events/event.model");
+const Event = require("../db/event/event.model");
 
 describe("# Events", () => {
   let server;

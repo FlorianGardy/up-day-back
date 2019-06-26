@@ -1,4 +1,4 @@
-const Event = require("./event.model");
+const Event = require("../db/event/event.model");
 const Joi = require("@hapi/joi");
 
 module.exports = [

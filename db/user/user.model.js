@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-const sequelize = require("../../db/connect");
+const sequelize = require("../connect");
 
 const User = sequelize.define(
   "user",
@@ -16,6 +16,14 @@ const User = sequelize.define(
     },
     password: {
       type: Sequelize.STRING,
+      allowNull: false
+    },
+    role: {
+      type: Sequelize.ENUM("admin", "user"),
+      allowNull: false
+    },
+    token: {
+      type: Sequelize.STRING(512),
       allowNull: false
     }
   },

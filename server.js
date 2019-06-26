@@ -12,8 +12,8 @@ const server = Hapi.server({
   }
 });
 
-server.route(require("./resources/events/event.routes"));
-server.route(require("./resources/users/user.routes"));
+server.route(require("./routes/event.routes"));
+server.route(require("./routes/user.routes"));
 
 exports.init = async () => {
   const sequelize = require("./db/connect");
@@ -25,12 +25,14 @@ exports.init = async () => {
 exports.start = async () => {
   const sequelize = require("./db/connect");
   await sequelize.sync();
+
   try {
     await sequelize.authenticate();
     console.log("Connection has been established successfully.");
   } catch (err) {
     console.error("Unable to connect to the database:", err);
   }
+
   await server.start();
   console.log(`Server running at: ${server.info.uri}`);
   return server;

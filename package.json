@@ -6,10 +6,12 @@
   "dependencies": {
     "@hapi/hapi": "^18.3.1",
     "@hapi/joi": "^15.0.3",
+    "bcrypt": "^3.0.6",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "esdoc": "^1.1.0",
     "esdoc-standard-plugin": "^1.0.0",
+    "jsonwebtoken": "^8.5.1",
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.3",
     "sequelize": "^5.8.9"
