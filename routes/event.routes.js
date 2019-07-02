@@ -34,6 +34,14 @@ module.exports = [
     method: "POST",
     path: "/events",
     handler: function(request, h) {
+      if (
+        !request.payload.hasOwnProperty("date") ||
+        !request.payload.hasOwnProperty("type") ||
+        !request.payload.hasOwnProperty("nature") ||
+        !request.payload.hasOwnProperty("volume")
+      ) {
+        return h.response("Wrong payload").code(500);
+      }
       return Event.create(request.payload).catch(err => console.log(err));
     }
   }
