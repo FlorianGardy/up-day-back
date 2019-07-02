@@ -1,6 +1,6 @@
 const should = require("should");
-const { init } = require("../server");
-const User = require("../db/user/user.model");
+const { init } = require("../src/server");
+const User = require("../src/db/user/user.model");
 
 describe("# Users", () => {
   let server;

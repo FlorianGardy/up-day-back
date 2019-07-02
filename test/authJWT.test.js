@@ -1,6 +1,6 @@
 const should = require("should");
 const Hapi = require("@hapi/hapi");
-const { AUTH_JWT } = require("../plugins/authJwt");
+const { AUTH_JWT } = require("../src/plugins/authJwt");
 
 describe("# Auth JWT pluggin", () => {
   let server;
@@ -17,7 +17,7 @@ describe("# Auth JWT pluggin", () => {
 
   it("should responds with 400 when headers is missing", async () => {
     await server.register({
-      plugin: require("../plugins/authJwt")
+      plugin: require("../src/plugins/authJwt")
     });
 
     server.route({
@@ -40,7 +40,7 @@ describe("# Auth JWT pluggin", () => {
 
   it("should responds with 200 and the handler has an access to req.auth.credentials (JWToken & uuid) when the header.athorization is set", async () => {
     await server.register({
-      plugin: require("../plugins/authJwt"),
+      plugin: require("../src/plugins/authJwt"),
       options: {
         validate: () => "myUuid"
       }

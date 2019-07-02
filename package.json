@@ -27,7 +27,7 @@
     "should": "^13.2.3"
   },
   "scripts": {
-    "start": "NODE_ENV=prod nodemon index.js",
+    "start": "NODE_ENV=prod nodemon ./src/index.js",
     "test": "NODE_ENV=test mocha",
     "docs": "./node_modules/.bin/esdoc && xdg-open ./docs/index.html &"
   },
