@@ -5,6 +5,9 @@ module.exports = [
   {
     method: "GET",
     path: "/events",
+    options: {
+      auth: false
+    },
     handler: function() {
       return Event.findAll().catch(err => console.log(err));
     }
@@ -21,6 +24,7 @@ module.exports = [
       }).catch(err => console.log(err));
     },
     options: {
+      auth: false,
       validate: {
         params: {
           userId: Joi.number()
@@ -33,6 +37,9 @@ module.exports = [
   {
     method: "POST",
     path: "/events",
+    options: {
+      auth: false
+    },
     handler: function(request, h) {
       if (
         !request.payload.hasOwnProperty("date") ||

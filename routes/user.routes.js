@@ -5,6 +5,9 @@ module.exports = [
   {
     method: "GET",
     path: "/users",
+    options: {
+      auth: false
+    },
     handler: async function() {
       return await getUsers();
     }
@@ -12,9 +15,20 @@ module.exports = [
   {
     method: "POST",
     path: "/users",
+    options: {
+      auth: false
+    },
     handler: async function(request, h) {
-      const { name, password, role } = request.payload;
-      return await createUser(name, password, role);
+      if (
+        !request.payload.hasOwnProperty("name") ||
+        !request.payload.hasOwnProperty("password") ||
+        !request.payload.hasOwnProperty("role")
+      ) {
+        return h.response("Wrong payload").code(500);
+      }
+
+      const { name, password, email, role } = request.payload;
+      return await createUser(name, password, email, role);
     }
   }
 ];

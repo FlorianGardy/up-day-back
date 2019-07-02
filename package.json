@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@hapi/boom": "^7.4.2",
     "@hapi/hapi": "^18.3.1",
     "@hapi/joi": "^15.0.3",
     "bcrypt": "^3.0.6",
@@ -14,7 +15,8 @@
     "jsonwebtoken": "^8.5.1",
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^5.8.9"
+    "sequelize": "^5.8.9",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "husky": "^2.4.1",

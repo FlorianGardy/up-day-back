@@ -1,24 +1,30 @@
-const bcrypt = require("bcrypt");
 const User = require("./user.model");
 const jwt = require("jsonwebtoken");
-
-function generateJWToken(payload) {
-  return jwt.sign(payload, process.env.SERVER_JWT_SECRET);
-}
-
-async function hash(password) {
-  const saltRounds = 10;
-  return await bcrypt.hash(password, saltRounds);
-}
+const uuidv1 = require("uuid/v1");
+const bcrypt = require("bcrypt");
 
 // Create a user
-async function createUser(name, password, role) {
+async function createUser(name, password, email, role) {
   try {
-    const hashedPassword = await hash(password);
-    const JWToken = await generateJWToken({ name, hashedPassword, role });
+    // Generates UUID (Universal Unique Identifier)
+    const uuid = uuidv1();
+
+    // Generates hashed password
+    const saltRounds = 10;
+    let hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // Generates JSON Web Token
+    const JWToken = await jwt.sign(
+      { uuid, name, hashedPassword, email },
+      process.env.SERVER_JWT_SECRET
+    );
+
+    // Creates a new user in DB
     const user = {
+      uuid,
       name,
       password: hashedPassword,
+      email,
       role,
       token: JWToken
     };
@@ -37,4 +43,22 @@ async function getUsers() {
   }
 }
 
-module.exports = { createUser, getUsers };
+// Check if a token is valid
+async function findUuidByToken(JWToken) {
+  try {
+    const userInstance = await User.findOne({
+      where: { token: JWToken },
+      attributes: ["uuid"]
+    });
+
+    if (userInstance) {
+      return userInstance.get({
+        plain: true
+      }).uuid;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+module.exports = { createUser, getUsers, findUuidByToken };
