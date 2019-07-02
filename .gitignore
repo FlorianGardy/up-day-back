@@ -121,3 +121,6 @@ typings/
 
 # ESDoc docs
 docs/
+
+# VSCode
+.vscode
