@@ -6,12 +6,19 @@ Fichier .env requit :
 
 ```
 # Database infos
-DB_HOST=localhost
-DB_NAME=database //Nom de la base de donnée utilisée en deploiment
-DB_TEST=database_test //Nom de la base de donnée utilisée en test
-DB_USER=user
-DB_PASS=pass
-DB_PORT=5432
+# PROD Database infos
+DB_HOST=prodDbServer
+DB_NAME=prodDbName
+DB_PORT=prodDbPort
+DB_USER=prodDbUser
+DB_PASS=prodDbPassword
+
+# TEST Database infos
+DB_HOST_TEST=testDbServer
+DB_NAME_TEST=testDbName
+DB_PORT_TEST=testDbPort
+DB_USER_TEST=testDbUser
+DB_PASS_TEST=testDbPassword
 ```
 
 # Description

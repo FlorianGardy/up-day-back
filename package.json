@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "@hapi/hapi": "^18.3.1",
+    "@hapi/joi": "^15.0.3",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "esdoc": "^1.1.0",
@@ -22,7 +23,7 @@
     "should": "^13.2.3"
   },
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "NODE_ENV=prod nodemon index.js",
     "test": "NODE_ENV=test mocha",
     "docs": "./node_modules/.bin/esdoc && xdg-open ./docs/index.html &"
   },
