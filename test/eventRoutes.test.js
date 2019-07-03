@@ -150,4 +150,33 @@ describe("# Events", () => {
       should(payload).match(event);
     });
   });
+
+  describe("## DELETE /events/{id}", () => {
+    it.only("should return code 400 if the event doesn't exist", async () => {
+      const res = await server.inject({
+        method: "DELETE",
+        url: "/events/1"
+      });
+      should(res.statusCode).equal(400);
+    });
+
+    it.only("should return code 200 if the event has been successfuly deleted", async () => {
+      const event = {
+        date: "2019-06-04T12:59:00.000Z",
+        type: "pipi",
+        nature: "normale",
+        volume: "+++",
+        context: ["fuite", "gaz"],
+        comment: "pipi",
+        userId: 1
+      };
+      await Event.create(event);
+
+      const res = await server.inject({
+        method: "DELETE",
+        url: "/events/1"
+      });
+      should(res.statusCode).equal(200);
+    });
+  });
 });

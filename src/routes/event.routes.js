@@ -1,4 +1,5 @@
 const Event = require("../db/event/event.model");
+const { deleteEvent } = require("../db/event/event.actions");
 const Joi = require("@hapi/joi");
 
 module.exports = [
@@ -50,6 +51,28 @@ module.exports = [
         return h.response("Wrong payload").code(500);
       }
       return Event.create(request.payload).catch(err => console.log(err));
+    }
+  },
+  {
+    method: "DELETE",
+    path: "/events/{id}",
+    handler: async function(request, h) {
+      const eventId = request.params.id;
+      const nbDeletedEvent = await deleteEvent(eventId);
+      if (nbDeletedEvent === 0) {
+        return h.response("This event id doesn't exist").code(400);
+      }
+      return h.response(`Event ${eventId} deleted`).code(200);
+    },
+    options: {
+      auth: false,
+      validate: {
+        params: {
+          id: Joi.number()
+            .integer()
+            .required()
+        }
+      }
     }
   }
 ];
