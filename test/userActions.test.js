@@ -15,13 +15,13 @@ describe("# User actions (database functions)", () => {
   });
 
   describe("## getUserByNameAndPass", () => {
-    it.only("should return an empty object if the user doesn't exist in the database", async () => {
+    it("should return an empty object if the user doesn't exist in the database", async () => {
       const userInstance1 = await getUserByNameAndPass("myName", "myPass");
       should(userInstance1.constructor).equal(Object); // Is an object ?
       should(Object.entries(userInstance1).length).equal(0); // Is empty ?
     });
 
-    it.only("should return an empty object if the params are not properly set", async () => {
+    it("should return an empty object if the params are not properly set", async () => {
       const userInstance2 = await getUserByNameAndPass();
       should(userInstance2.constructor).equal(Object); // Is an object ?
       should(Object.entries(userInstance2).length).equal(0); // Is empty ?
@@ -31,7 +31,7 @@ describe("# User actions (database functions)", () => {
       should(Object.entries(userInstance3).length).equal(0); // Is empty ?
     });
 
-    it.only("should return a user object if the user (name/password) exists in the database", async () => {
+    it("should return a user object if the user (name/password) exists in the database", async () => {
       const user = {
         uuid: "1753df50-9cbf-11e9-bf9b-6da555a5236c",
         name: "myName",
