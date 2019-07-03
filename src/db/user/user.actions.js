@@ -61,4 +61,32 @@ async function findUuidByToken(JWToken) {
   }
 }
 
-module.exports = { createUser, getUsers, findUuidByToken };
+// Get a user by Name & Password
+async function getUserByNameAndPass(name, password) {
+  if (!name || !password) {
+    if (process.env.DEBUG === "true") {
+      console.log(`ERROR! getUserByNameAndPass function - wrong params`);
+      console.log(`name = ${name}, password = ${password}\n`);
+    }
+    return {};
+  }
+
+  const userInstance = await User.findOne({
+    where: { name, password }
+  });
+
+  if (userInstance) {
+    return userInstance.get({
+      plain: true
+    });
+  }
+
+  return {};
+}
+
+module.exports = {
+  createUser,
+  getUsers,
+  findUuidByToken,
+  getUserByNameAndPass
+};
