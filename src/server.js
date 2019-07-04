@@ -28,6 +28,7 @@ async function registerRoutes() {
   // Routes
   server.route(require("./routes/event.routes"));
   server.route(require("./routes/user.routes"));
+  server.route(require("./routes/login.routes"));
 }
 
 let _isInit = false;

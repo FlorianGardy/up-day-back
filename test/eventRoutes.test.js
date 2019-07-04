@@ -124,8 +124,7 @@ describe("# Events", () => {
     it("returns the code 500 if no payload is provided", async () => {
       const res = await server.inject({
         method: "POST",
-        url: "/events",
-        payload: {}
+        url: "/events"
       });
       should(res.statusCode).equal(500);
     });
@@ -152,7 +151,7 @@ describe("# Events", () => {
   });
 
   describe("## DELETE /events/{id}", () => {
-    it.only("should return code 400 if the event doesn't exist", async () => {
+    it("should return code 400 if the event doesn't exist", async () => {
       const res = await server.inject({
         method: "DELETE",
         url: "/events/1"
@@ -160,7 +159,7 @@ describe("# Events", () => {
       should(res.statusCode).equal(400);
     });
 
-    it.only("should return code 200 if the event has been successfuly deleted", async () => {
+    it("should return code 200 if the event has been successfuly deleted", async () => {
       const event = {
         date: "2019-06-04T12:59:00.000Z",
         type: "pipi",

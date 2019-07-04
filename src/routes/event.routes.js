@@ -43,6 +43,7 @@ module.exports = [
     },
     handler: function(request, h) {
       if (
+        !request.payload ||
         !request.payload.hasOwnProperty("date") ||
         !request.payload.hasOwnProperty("type") ||
         !request.payload.hasOwnProperty("nature") ||

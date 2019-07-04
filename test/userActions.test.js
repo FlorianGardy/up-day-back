@@ -2,6 +2,7 @@ const should = require("should");
 const { init } = require("../src/server");
 const User = require("../src/db/user/user.model");
 const { getUserByNameAndPass } = require("../src/db/user/user.actions");
+const bcrypt = require("bcrypt");
 
 describe("# User actions (database functions)", () => {
   let server;
@@ -32,10 +33,13 @@ describe("# User actions (database functions)", () => {
     });
 
     it("should return a user object if the user (name/password) exists in the database", async () => {
+      const saltRounds = 10;
+      let hashedPassword = await bcrypt.hash("myPass", saltRounds);
+
       const user = {
         uuid: "1753df50-9cbf-11e9-bf9b-6da555a5236c",
         name: "myName",
-        password: "myPass",
+        password: hashedPassword,
         email: "myMail@gmail.com",
         role: "standard",
         token: "myToken"
@@ -43,11 +47,9 @@ describe("# User actions (database functions)", () => {
 
       await User.create(user);
 
-      const userInstance4 = await getUserByNameAndPass("myName", "myPass");
-      user.createdAt = userInstance4.createdAt;
-      user.updatedAt = userInstance4.updatedAt;
+      const userInstance = await getUserByNameAndPass("myName", "myPass");
 
-      should(userInstance4).deepEqual(user);
+      should(userInstance).match(user);
     });
   });
 });

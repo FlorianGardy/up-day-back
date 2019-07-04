@@ -72,16 +72,15 @@ async function getUserByNameAndPass(name, password) {
   }
 
   const userInstance = await User.findOne({
-    where: { name, password }
+    where: { name }
   });
+  if (!userInstance) return {};
+  const user = userInstance.get({ plain: true });
 
-  if (userInstance) {
-    return userInstance.get({
-      plain: true
-    });
-  }
+  const passwordIsValid = await bcrypt.compare(password, user.password);
+  if (!passwordIsValid) return {};
 
-  return {};
+  return user;
 }
 
 module.exports = {
