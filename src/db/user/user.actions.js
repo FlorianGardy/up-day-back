@@ -6,6 +6,20 @@ const bcrypt = require("bcrypt");
 // Create a user
 async function createUser(name, password, email, role) {
   try {
+    // Check if the name already exists in the database
+    const nameExist = await User.findOne({
+      where: { name: name }
+    });
+    if (nameExist) {
+      return {
+        name,
+        password,
+        email,
+        role,
+        error: "This user name already exists"
+      };
+    }
+
     // Generates UUID (Universal Unique Identifier)
     const uuid = uuidv1();
 

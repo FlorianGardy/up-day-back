@@ -19,15 +19,18 @@ module.exports = [
       auth: false
     },
     handler: async function(request, h) {
+      const userInfo = { ...request.payload };
+
       if (
-        !request.payload.hasOwnProperty("name") ||
-        !request.payload.hasOwnProperty("password") ||
-        !request.payload.hasOwnProperty("role")
+        !userInfo ||
+        !userInfo.hasOwnProperty("name") ||
+        !userInfo.hasOwnProperty("password") ||
+        !userInfo.hasOwnProperty("role")
       ) {
         return h.response("Wrong payload").code(500);
       }
 
-      const { name, password, email, role } = request.payload;
+      const { name, password, email, role } = userInfo;
       return await createUser(name, password, email, role);
     }
   }

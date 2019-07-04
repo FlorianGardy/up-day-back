@@ -1,7 +1,10 @@
 const should = require("should");
 const { init } = require("../src/server");
 const User = require("../src/db/user/user.model");
-const { getUserByNameAndPass } = require("../src/db/user/user.actions");
+const {
+  createUser,
+  getUserByNameAndPass
+} = require("../src/db/user/user.actions");
 const bcrypt = require("bcrypt");
 
 describe("# User actions (database functions)", () => {
@@ -13,6 +16,24 @@ describe("# User actions (database functions)", () => {
 
   afterEach(async () => {
     await server.stop();
+  });
+
+  describe("## createUser", () => {
+    it("should return an object containing a key { 'error': 'This user name already exists' } if the userName already exists in the database ", async () => {
+      const user = {
+        uuid: "1753df50-9cbf-11e9-bf9b-6da555a5236c",
+        name: "myName",
+        password: "myPassword",
+        email: "myMail@gmail.com",
+        role: "standard",
+        token: "myToken"
+      };
+      await User.create(user);
+
+      const userInfo = await createUser("myName", "anotherPassword");
+
+      should(userInfo.error).equal("This user name already exists");
+    });
   });
 
   describe("## getUserByNameAndPass", () => {
