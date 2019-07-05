@@ -48,6 +48,10 @@ async function createUser(name, password, email, role) {
   }
 }
 
+async function deleteUser(uuid) {
+  return await User.destroy({ where: { uuid } });
+}
+
 // Get users list
 async function getUsers() {
   try {
@@ -99,6 +103,7 @@ async function getUserByNameAndPass(name, password) {
 
 module.exports = {
   createUser,
+  deleteUser,
   getUsers,
   findUuidByToken,
   getUserByNameAndPass
