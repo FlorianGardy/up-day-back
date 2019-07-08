@@ -86,8 +86,12 @@ module.exports = [
       auth: false
     },
     handler: async function(request, h) {
-      const { uuid } = request.params;
-      return await User.destroy({ where: { uuid } });
+      try {
+        const { uuid } = request.params;
+        return await User.destroy({ where: { uuid } });
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 ];

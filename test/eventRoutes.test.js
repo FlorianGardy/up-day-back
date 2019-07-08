@@ -1,6 +1,7 @@
 const should = require("should");
 const { init } = require("../src/server");
 const Event = require("../src/db/event/event.model");
+const User = require("../src/db/user/user.model");
 
 describe("# Events routes", () => {
   let server;
@@ -14,42 +15,45 @@ describe("# Events routes", () => {
   });
 
   describe("## GET /events", () => {
-    it("should return the code 200", async () => {
+    it("should return the code 200 and an empty array if no event has been created", async () => {
       const res = await server.inject({
         method: "GET",
-        url: "/events"
+        url: "/events",
+        payload: {}
       });
+
       should(res.statusCode).equal(200);
+      should(JSON.parse(res.payload)).deepEqual([]);
     });
 
-    it("should return an empty array if no event has been created", async () => {
-      const res = await server.inject({
-        method: "GET",
-        url: "/events"
-      });
-      const payload = JSON.parse(res.payload);
-      should(res.statusCode).equal(200);
-      should(payload).deepEqual([]);
-    });
+    it("should return the code 200 and an array containing all the events existing in the database if any", async () => {
+      const user = {
+        uuid: "23144200-a195-11e9-be71-915c08fe32a4",
+        name: "Chuck",
+        password: "Norris",
+        email: "myMail@gmail.com",
+        role: "standard",
+        token: "tok"
+      };
+      await User.create(user);
 
-    it("should return an array containing all the events existing in the database if any", async () => {
       const event1 = {
         date: "2019-06-04T12:59:00.000Z",
         type: "pipi",
         nature: "normale",
         volume: "+++",
-        context: ["fuite", "gaz"],
+        context: ["fuite", "urgence"],
         comment: "pipi",
-        userId: 1
+        uuid: "23144200-a195-11e9-be71-915c08fe32a4"
       };
       const event2 = {
         date: "2019-06-05T13:59:00.000Z",
         type: "pipi",
         nature: "mitigé",
         volume: "+",
-        context: ["fuite", "gaz"],
+        context: ["fuite", "urgence"],
         comment: "gros pipi",
-        userId: 1
+        uuid: "23144200-a195-11e9-be71-915c08fe32a4"
       };
       await Event.create(event1);
       await Event.create(event2);
@@ -63,42 +67,26 @@ describe("# Events routes", () => {
     });
   });
 
-  describe("## GET /events/userId", () => {
-    it("should return the code 200 if the userId is properly filled", async () => {
-      const res = await server.inject({
-        method: "GET",
-        url: "/events/1"
-      });
-      should(res.statusCode).equal(200);
-    });
+  describe("## GET /events/{uuid}", () => {
+    it("should return the code 200 an array containing the events created by the given user if the user (uuid) exists in the database", async () => {
+      const user = {
+        uuid: "23144200-a195-11e9-be71-915c08fe32a4",
+        name: "Chuck",
+        password: "Norris",
+        email: "myMail@gmail.com",
+        role: "standard",
+        token: "tok"
+      };
+      await User.create(user);
 
-    it("returns the code 400 if the userId is not an integer", async () => {
-      const res = await server.inject({
-        method: "GET",
-        url: "/events/toto"
-      });
-      should(res.statusCode).equal(400);
-    });
-
-    it("returns an empty array if the given userId doesn't exist", async () => {
-      const res = await server.inject({
-        method: "GET",
-        url: "/events/9999"
-      });
-      should(res.statusCode).equal(200);
-      const payload = JSON.parse(res.payload);
-      should(payload).match([]);
-    });
-
-    it("returns an array containing the events created by the given user", async () => {
       const event1 = {
         date: "2019-06-04T12:59:00.000Z",
         type: "pipi",
         nature: "normale",
         volume: "+++",
-        context: ["fuite", "gaz"],
+        context: ["fuite", "urgence"],
         comment: "pipi",
-        userId: 1
+        uuid: "23144200-a195-11e9-be71-915c08fe32a4"
       };
 
       const event2 = {
@@ -106,19 +94,28 @@ describe("# Events routes", () => {
         type: "pipi",
         nature: "normale",
         volume: "+++",
-        context: ["fuite", "gaz"],
+        context: ["fuite", "urgence"],
         comment: "pipi",
-        userId: 1
+        uuid: "23144200-a195-11e9-be71-915c08fe32a4"
       };
       await Event.create(event1);
       await Event.create(event2);
       const res = await server.inject({
         method: "GET",
-        url: "/events/1"
+        url: "/events/23144200-a195-11e9-be71-915c08fe32a4"
       });
       should(res.statusCode).equal(200);
       const payload = JSON.parse(res.payload);
       should(payload).match([event1, event2]);
+    });
+
+    it("should return the code 200 an empty array if the given uuid doesn't exist", async () => {
+      const res = await server.inject({
+        method: "GET",
+        url: "/events/23144200-a195-11e9-be71-915c08fe32a4"
+      });
+      should(res.statusCode).equal(200);
+      should(JSON.parse(res.payload)).deepEqual([]);
     });
   });
 
@@ -133,6 +130,16 @@ describe("# Events routes", () => {
     });
 
     it("should return the code 200 and sends the payload back if the payload is properly filled", async () => {
+      const user = {
+        uuid: "23144200-a195-11e9-be71-915c08fe32a4",
+        name: "Chuck",
+        password: "Norris",
+        email: "myMail@gmail.com",
+        role: "standard",
+        token: "tok"
+      };
+      await User.create(user);
+
       const event = {
         date: "2019-06-04T12:59:00.000Z",
         type: "pipi",
@@ -140,7 +147,7 @@ describe("# Events routes", () => {
         volume: "+++",
         context: "fuite|urgence",
         comment: "pipi",
-        userId: 1
+        uuid: "23144200-a195-11e9-be71-915c08fe32a4"
       };
       const res = await server.inject({
         method: "POST",
@@ -167,14 +174,24 @@ describe("# Events routes", () => {
     });
 
     it("should return the code 200 and the message '1' if the event has been successfuly deleted", async () => {
+      const user = {
+        uuid: "23144200-a195-11e9-be71-915c08fe32a4",
+        name: "Chuck",
+        password: "Norris",
+        email: "myMail@gmail.com",
+        role: "standard",
+        token: "tok"
+      };
+      await User.create(user);
+
       const event = {
         date: "2019-06-04T12:59:00.000Z",
         type: "pipi",
         nature: "normale",
         volume: "+++",
-        context: ["fuite", "gaz"],
+        context: ["fuite", "urgence"],
         comment: "pipi",
-        userId: 1
+        uuid: "23144200-a195-11e9-be71-915c08fe32a4"
       };
       await Event.create(event);
 

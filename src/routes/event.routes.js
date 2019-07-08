@@ -8,28 +8,34 @@ module.exports = [
     options: {
       auth: false
     },
-    handler: function() {
-      return Event.findAll().catch(err => console.log(err));
+    handler: async function() {
+      try {
+        return Event.findAll();
+      } catch (err) {
+        console.log(err);
+      }
     }
   },
   {
     method: "GET",
-    path: "/events/{userId}",
-    handler: function(request) {
-      const userId = request.params.userId;
-      return Event.findAll({
-        where: {
-          userId: userId
-        }
-      }).catch(err => console.log(err));
+    path: "/events/{uuid}",
+    handler: async function(request) {
+      try {
+        const uuid = request.params.uuid;
+        return Event.findAll({
+          where: {
+            uuid: uuid
+          }
+        });
+      } catch (err) {
+        console.log(err);
+      }
     },
     options: {
       auth: false,
       validate: {
         params: {
-          userId: Joi.number()
-            .integer()
-            .required()
+          uuid: Joi.string().required()
         }
       }
     }
@@ -37,7 +43,7 @@ module.exports = [
   {
     method: "POST",
     path: "/events",
-    handler: function(request, h) {
+    handler: async function(request, h) {
       try {
         const eventToCreate = {
           ...request.payload,
@@ -58,7 +64,7 @@ module.exports = [
           volume: Joi.string().required(),
           context: Joi.string(),
           comment: Joi.string(),
-          userId: Joi.number().integer()
+          uuid: Joi.string().required()
         }
       }
     }
@@ -67,12 +73,16 @@ module.exports = [
     method: "DELETE",
     path: "/events/{id}",
     handler: async function(request, h) {
-      const eventId = request.params.id;
-      return await Event.destroy({
-        where: {
-          id: eventId
-        }
-      });
+      try {
+        const eventId = request.params.id;
+        return await Event.destroy({
+          where: {
+            id: eventId
+          }
+        });
+      } catch (err) {
+        console.log(err);
+      }
     },
     options: {
       auth: false,

@@ -34,10 +34,6 @@ const Event = sequelize.define(
     comment: {
       type: Sequelize.STRING,
       allowNull: true
-    },
-    userId: {
-      type: Sequelize.INTEGER,
-      allowNull: false
     }
   },
   {
@@ -45,13 +41,6 @@ const Event = sequelize.define(
   }
 );
 
-User.hasMany(Event, {
-  foreignKey: "userId",
-  constraints: false
-});
-Event.belongsTo(User, {
-  // foreignKey: 'ingredientId',
-  constraints: false
-});
+Event.belongsTo(User, { foreignKey: "uuid", targetKey: "uuid" });
 
 module.exports = Event;

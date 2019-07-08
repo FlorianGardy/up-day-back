@@ -28,7 +28,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=production nodemon ./src/index.js",
-    "test": "NODE_ENV=test mocha",
+    "test": "NODE_ENV=test mocha --timeout 10000",
     "docs": "./node_modules/.bin/esdoc && xdg-open ./docs/index.html &"
   },
   "repository": {

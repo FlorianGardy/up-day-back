@@ -5,6 +5,7 @@ var cors = require("cors");
 const Hapi = require("@hapi/hapi");
 
 const User = require("./db/user/user.model");
+const Event = require("./db/event/event.model");
 
 const server = Hapi.server({
   port: 3030,
@@ -63,9 +64,9 @@ exports.init = async () => {
 exports.start = async () => {
   // Database
   const sequelize = require("./db/connect");
-  await sequelize.sync();
-
   try {
+    await sequelize.sync();
+
     await sequelize.authenticate();
     console.log("Connection has been established successfully.");
   } catch (err) {
