@@ -112,4 +112,38 @@ describe("# Users routes", () => {
       should(res.statusCode).equal(400);
     });
   });
+
+  describe("## DELETE /users/{uuid}", () => {
+    it("should return the code 200 and the message '1' if the user has been successfully deleted", async () => {
+      const user = {
+        uuid: "1753df50-9cbf-11e9-bf9b-6da555a523dd",
+        name: "Chuck",
+        password: "Norris",
+        email: "myMail@gmail.com",
+        role: "standard",
+        token: "tok"
+      };
+      await User.create(user);
+
+      const res = await server.inject({
+        method: "DELETE",
+        url: "/users/1753df50-9cbf-11e9-bf9b-6da555a523dd",
+        payload: {}
+      });
+
+      should(res.statusCode).equal(200);
+      should(res.payload).equal("1");
+    });
+
+    it("should return the code 200 and the message '0' if the user doesn't exist in the database", async () => {
+      const res = await server.inject({
+        method: "DELETE",
+        url: "/users/1753df50-9cbf-11e9-bf9b-6da555a523dd",
+        payload: {}
+      });
+
+      should(res.statusCode).equal(200);
+      should(res.payload).equal("0");
+    });
+  });
 });

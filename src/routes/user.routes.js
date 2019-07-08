@@ -4,8 +4,6 @@ const jwt = require("jsonwebtoken");
 const uuidv1 = require("uuid/v1");
 const bcrypt = require("bcrypt");
 
-const { getUsers, deleteUser } = require("../db/user/user.actions");
-
 module.exports = [
   {
     method: "GET",
@@ -90,7 +88,8 @@ module.exports = [
       auth: false
     },
     handler: async function(request, h) {
-      return await deleteUser(request.params.uuid);
+      const { uuid } = request.params;
+      return await User.destroy({ where: { uuid } });
     }
   }
 ];

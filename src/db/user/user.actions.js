@@ -1,10 +1,6 @@
 const User = require("./user.model");
 const bcrypt = require("bcrypt");
 
-async function deleteUser(uuid) {
-  return await User.destroy({ where: { uuid } });
-}
-
 // Check if a token is valid
 async function findUuidByToken(JWToken) {
   try {
@@ -46,7 +42,6 @@ async function getUserByNameAndPass(name, password) {
 }
 
 module.exports = {
-  deleteUser,
   findUuidByToken,
   getUserByNameAndPass
 };
