@@ -2,7 +2,7 @@ const should = require("should");
 const { init } = require("../src/server");
 const User = require("../src/db/user/user.model");
 
-describe("# Users", () => {
+describe("# Users routes", () => {
   let server;
 
   beforeEach(async () => {
@@ -14,24 +14,17 @@ describe("# Users", () => {
   });
 
   describe("## GET /users", () => {
-    it("should responds with 200", async () => {
-      const res = await server.inject({
-        method: "GET",
-        url: "/users"
-      });
-      should(res.statusCode).equal(200);
-    });
-
-    it("should responds an empty array if no user has been created yet", async () => {
+    it("should return the code 200 and an empty array if no user has been created yet", async () => {
       const res = await server.inject({
         method: "GET",
         url: "/users"
       });
       const payload = JSON.parse(res.payload);
+      should(res.statusCode).equal(200);
       should(payload).deepEqual([]);
     });
 
-    it("should returns an array containing 2 users if 2 users exist in the database", async () => {
+    it("should return the code 200 an array containing 2 users if 2 users exist in the database", async () => {
       const user1 = {
         uuid: "1753df50-9cbf-11e9-bf9b-6da555a5236b",
         name: "Jojo",
@@ -56,8 +49,9 @@ describe("# Users", () => {
         method: "GET",
         url: "/users"
       });
-      const payload = JSON.parse(res.payload);
-      should(payload).match([user1, user2]);
+
+      should(res.statusCode).equal(200);
+      should(JSON.parse(res.payload)).match([user1, user2]);
     });
   });
 

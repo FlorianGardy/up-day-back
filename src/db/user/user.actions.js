@@ -5,15 +5,6 @@ async function deleteUser(uuid) {
   return await User.destroy({ where: { uuid } });
 }
 
-// Get users list
-async function getUsers() {
-  try {
-    return await User.findAll();
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 // Check if a token is valid
 async function findUuidByToken(JWToken) {
   try {
@@ -56,7 +47,6 @@ async function getUserByNameAndPass(name, password) {
 
 module.exports = {
   deleteUser,
-  getUsers,
   findUuidByToken,
   getUserByNameAndPass
 };

@@ -14,7 +14,11 @@ module.exports = [
       auth: false
     },
     handler: async function() {
-      return await getUsers();
+      try {
+        return await User.findAll();
+      } catch (err) {
+        console.log(err);
+      }
     }
   },
 
