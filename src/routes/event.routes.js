@@ -37,20 +37,30 @@ module.exports = [
   {
     method: "POST",
     path: "/events",
-    options: {
-      auth: false
-    },
     handler: function(request, h) {
-      if (
-        !request.payload ||
-        !request.payload.hasOwnProperty("date") ||
-        !request.payload.hasOwnProperty("type") ||
-        !request.payload.hasOwnProperty("nature") ||
-        !request.payload.hasOwnProperty("volume")
-      ) {
-        return h.response("Wrong payload").code(500);
+      try {
+        const eventToCreate = {
+          ...request.payload,
+          context: request.payload.context.split("|")
+        };
+        return Event.create(eventToCreate);
+      } catch (err) {
+        console.log(err);
       }
-      return Event.create(request.payload).catch(err => console.log(err));
+    },
+    options: {
+      auth: false,
+      validate: {
+        payload: {
+          date: Joi.string().required(),
+          type: Joi.string().required(),
+          nature: Joi.string().required(),
+          volume: Joi.string().required(),
+          context: Joi.string(),
+          comment: Joi.string(),
+          userId: Joi.number().integer()
+        }
+      }
     }
   },
   {

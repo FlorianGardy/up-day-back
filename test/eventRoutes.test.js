@@ -2,7 +2,7 @@ const should = require("should");
 const { init } = require("../src/server");
 const Event = require("../src/db/event/event.model");
 
-describe("# Events", () => {
+describe("# Events routes", () => {
   let server;
 
   beforeEach(async () => {
@@ -123,21 +123,22 @@ describe("# Events", () => {
   });
 
   describe("## POST /events", () => {
-    it("returns the code 500 if no payload is provided", async () => {
+    it("should return the code 400 if the payload is not properly filled", async () => {
       const res = await server.inject({
         method: "POST",
-        url: "/events"
+        url: "/events",
+        payload: {}
       });
-      should(res.statusCode).equal(500);
+      should(res.statusCode).equal(400);
     });
 
-    it("responds with 200 and sends the payload back if the payload is properly populated", async () => {
+    it("should return the code 200 and sends the payload back if the payload is properly filled", async () => {
       const event = {
         date: "2019-06-04T12:59:00.000Z",
         type: "pipi",
         nature: "normale",
         volume: "+++",
-        context: ["fuite", "gaz"],
+        context: "fuite|urgence",
         comment: "pipi",
         userId: 1
       };
@@ -146,9 +147,12 @@ describe("# Events", () => {
         url: "/events",
         payload: event
       });
+
       should(res.statusCode).equal(200);
-      const payload = JSON.parse(res.payload);
-      should(payload).match(event);
+      should(JSON.parse(res.payload)).match({
+        ...event,
+        context: event.context.split("|")
+      });
     });
   });
 

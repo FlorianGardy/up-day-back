@@ -6,9 +6,6 @@ module.exports = [
   {
     method: "POST",
     path: "/login",
-    options: {
-      auth: false
-    },
     handler: async function(request, h) {
       const { name, password } = request.payload;
 
@@ -33,6 +30,7 @@ module.exports = [
       return user;
     },
     options: {
+      auth: false,
       validate: {
         payload: {
           name: Joi.string().required(),
