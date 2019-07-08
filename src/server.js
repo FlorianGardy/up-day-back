@@ -4,7 +4,7 @@ require("dotenv").config();
 var cors = require("cors");
 const Hapi = require("@hapi/hapi");
 
-const { findUuidByToken } = require("./db/user/user.actions");
+const User = require("./db/user/user.model");
 
 const server = Hapi.server({
   port: 3030,
@@ -19,7 +19,22 @@ async function registerPlugins() {
   await server.register({
     plugin: require("./plugins/authJwt"),
     options: {
-      validate: findUuidByToken
+      validate: async () => {
+        try {
+          const userInstance = await User.findOne({
+            where: { token: JWToken },
+            attributes: ["uuid"]
+          });
+
+          if (userInstance) {
+            return userInstance.get({
+              plain: true
+            }).uuid;
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
     }
   });
 }

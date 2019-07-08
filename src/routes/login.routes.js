@@ -1,5 +1,6 @@
 const Joi = require("@hapi/joi");
-const { getUserByNameAndPass } = require("../db/user/user.actions");
+const bcrypt = require("bcrypt");
+const User = require("../db/user/user.model");
 
 module.exports = [
   {
@@ -9,14 +10,35 @@ module.exports = [
       auth: false
     },
     handler: async function(request, h) {
-      if (request.payload === null) {
-        return h.response("Wrong payload").code(500);
+      const { name, password } = request.payload;
+
+      const userInstance = await User.findOne({
+        where: { name }
+      });
+
+      // Check if the username exists in the database
+      const wrongUserMessage = {
+        statusCode: 400,
+        error: "Bad Request",
+        message: "This user doesn't exist or the password is incorrect"
+      };
+      if (!userInstance) return h.response(wrongUserMessage).code(400);
+
+      const user = userInstance.get({ plain: true });
+
+      // Check if the password provide matches the one saved in db
+      const passwordIsValid = await bcrypt.compare(password, user.password);
+      if (!passwordIsValid) return h.response(wrongUserMessage).code(400);
+
+      return user;
+    },
+    options: {
+      validate: {
+        payload: {
+          name: Joi.string().required(),
+          password: Joi.string().required()
+        }
       }
-
-      const name = request.payload.name;
-      const password = request.payload.password;
-
-      return await getUserByNameAndPass(name, password);
     }
   }
 ];

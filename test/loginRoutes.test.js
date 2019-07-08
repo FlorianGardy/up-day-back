@@ -15,15 +15,7 @@ describe("# Login routes", () => {
   });
 
   describe("## POST /login", () => {
-    it("should return a code 500 if the payload is not properly filled", async () => {
-      const res = await server.inject({
-        method: "POST",
-        url: "/login"
-      });
-      should(res.statusCode).equal(500);
-    });
-
-    it("should return a code 200 and the user (object) corresponding to the user/name provided", async () => {
+    it("should return the code 200 and the user (object) if the couple name/password provided exists in the database", async () => {
       const saltRounds = 10;
       let hashedPassword = await bcrypt.hash("myPassword", saltRounds);
 
@@ -48,6 +40,26 @@ describe("# Login routes", () => {
 
       should(res.statusCode).equal(200);
       should(JSON.parse(res.payload)).match(user);
+    });
+
+    it("should return the code 400 if the payload is not properly filled", async () => {
+      const res = await server.inject({
+        method: "POST",
+        url: "/login"
+      });
+      should(res.statusCode).equal(400);
+    });
+
+    it("should return the code 400 if username or the password provided are incorrect", async () => {
+      const res = await server.inject({
+        method: "POST",
+        url: "/login",
+        payload: {
+          name: "monNom",
+          password: "monPassword"
+        }
+      });
+      should(res.statusCode).equal(400);
     });
   });
 });
