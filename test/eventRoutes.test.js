@@ -14,7 +14,7 @@ describe("# Events", () => {
   });
 
   describe("## GET /events", () => {
-    it("returns the code 200", async () => {
+    it("should return the code 200", async () => {
       const res = await server.inject({
         method: "GET",
         url: "/events"
@@ -22,16 +22,17 @@ describe("# Events", () => {
       should(res.statusCode).equal(200);
     });
 
-    it("returns an empty array if no event has been created", async () => {
+    it("should return an empty array if no event has been created", async () => {
       const res = await server.inject({
         method: "GET",
         url: "/events"
       });
       const payload = JSON.parse(res.payload);
+      should(res.statusCode).equal(200);
       should(payload).deepEqual([]);
     });
 
-    it("returns an array containing all the events existing in the database if any", async () => {
+    it("should return an array containing all the events existing in the database if any", async () => {
       const event1 = {
         date: "2019-06-04T12:59:00.000Z",
         type: "pipi",
@@ -57,12 +58,13 @@ describe("# Events", () => {
         url: "/events"
       });
       const payload = JSON.parse(res.payload);
+      should(res.statusCode).equal(200);
       should(payload).match([event1, event2]);
     });
   });
 
   describe("## GET /events/userId", () => {
-    it("returns the code 200 if the userId is properly filled", async () => {
+    it("should return the code 200 if the userId is properly filled", async () => {
       const res = await server.inject({
         method: "GET",
         url: "/events/1"
@@ -151,15 +153,16 @@ describe("# Events", () => {
   });
 
   describe("## DELETE /events/{id}", () => {
-    it("should return code 400 if the event doesn't exist", async () => {
+    it("should return the code 200 and the message '0' if the event doesn't exist in the database", async () => {
       const res = await server.inject({
         method: "DELETE",
         url: "/events/1"
       });
-      should(res.statusCode).equal(400);
+      should(res.statusCode).equal(200);
+      should(res.payload).equal("0");
     });
 
-    it("should return code 200 if the event has been successfuly deleted", async () => {
+    it("should return the code 200 and the message '1' if the event has been successfuly deleted", async () => {
       const event = {
         date: "2019-06-04T12:59:00.000Z",
         type: "pipi",
@@ -176,6 +179,7 @@ describe("# Events", () => {
         url: "/events/1"
       });
       should(res.statusCode).equal(200);
+      should(res.payload).equal("1");
     });
   });
 });
