@@ -62,28 +62,60 @@ describe("# Users", () => {
   });
 
   describe("## POST /users", () => {
-    it("responds  with 500 when no datas are sent", async () => {
-      const res = await server.inject({
-        method: "POST",
-        url: "/users",
-        payload: {}
-      });
-      should(res.statusCode).equal(500);
-    });
-
-    it("responds with 200 and data when datas send", async () => {
+    it("should return the code 200 and the user just created if the payload is properly field and the user doesn't already exists in the database", async () => {
       const res = await server.inject({
         method: "POST",
         url: "/users",
         payload: {
           name: "Jiji",
           password: "1234",
-          role: "admin",
-          token: "secret"
+          email: "Jiji@gmail.com",
+          role: "admin"
         }
       });
+
       should(res.statusCode).equal(200);
-      should.exist(res.payload);
+      should(JSON.parse(res.payload)).match({
+        name: "Jiji",
+        email: "Jiji@gmail.com",
+        role: "admin"
+      });
+    });
+
+    it("should return the code 400 if the payload is not properly filled", async () => {
+      const res = await server.inject({
+        method: "POST",
+        url: "/users",
+        payload: {}
+      });
+
+      should(res.statusCode).equal(400);
+    });
+
+    it("should return the code 400 if the user already exist in the database", async () => {
+      await server.inject({
+        method: "POST",
+        url: "/users",
+        payload: {
+          name: "Jiji",
+          password: "1234",
+          email: "Jiji@gmail.com",
+          role: "admin"
+        }
+      });
+
+      const res = await server.inject({
+        method: "POST",
+        url: "/users",
+        payload: {
+          name: "Jiji",
+          password: "1234",
+          email: "Jiji@gmail.com",
+          role: "admin"
+        }
+      });
+
+      should(res.statusCode).equal(400);
     });
   });
 });
