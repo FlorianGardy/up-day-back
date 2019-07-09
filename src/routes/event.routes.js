@@ -10,7 +10,7 @@ module.exports = [
     },
     handler: async function() {
       try {
-        return Event.findAll();
+        return await Event.findAll();
       } catch (err) {
         console.log(err);
       }
@@ -22,7 +22,7 @@ module.exports = [
     handler: async function(request) {
       try {
         const uuid = request.params.uuid;
-        return Event.findAll({
+        return await Event.findAll({
           where: {
             uuid: uuid
           }
@@ -45,14 +45,15 @@ module.exports = [
     path: "/events",
     handler: async function(request, h) {
       try {
+        console.log(request.payload);
+
         if (request.payload.context) {
-          context = request.payload.context.split("|");
+          request.payload = {
+            ...request.payload,
+            context: request.payload.context.split("|")
+          };
         }
-        const eventToCreate = {
-          ...request.payload,
-          context
-        };
-        return Event.create(eventToCreate);
+        return await Event.create(request.payload);
       } catch (err) {
         console.log(err);
       }
