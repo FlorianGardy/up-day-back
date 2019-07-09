@@ -45,9 +45,12 @@ module.exports = [
     path: "/events",
     handler: async function(request, h) {
       try {
+        if (request.payload.context) {
+          context = request.payload.context.split("|");
+        }
         const eventToCreate = {
           ...request.payload,
-          context: request.payload.context.split("|")
+          context
         };
         return Event.create(eventToCreate);
       } catch (err) {
