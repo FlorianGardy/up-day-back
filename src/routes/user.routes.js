@@ -73,7 +73,7 @@ module.exports = [
         payload: {
           name: Joi.string().required(),
           password: Joi.string().required(),
-          email: Joi.string(),
+          email: [Joi.string(), Joi.any().allow(null)],
           role: Joi.valid(["standard", "admin"]).required()
         }
       }

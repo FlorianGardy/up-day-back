@@ -45,9 +45,7 @@ module.exports = [
     path: "/events",
     handler: async function(request, h) {
       try {
-        console.log(request.payload);
-
-        if (request.payload.context) {
+        if (request.payload.context || request.payload.context === "") {
           request.payload = {
             ...request.payload,
             context: request.payload.context.split("|")
@@ -66,8 +64,8 @@ module.exports = [
           type: Joi.string().required(),
           nature: Joi.string().required(),
           volume: Joi.string().required(),
-          context: Joi.string(),
-          comment: Joi.string(),
+          context: [Joi.string(), Joi.any().allow(null)],
+          comment: [Joi.string(), Joi.any().allow(null)],
           uuid: Joi.string().required()
         }
       }
