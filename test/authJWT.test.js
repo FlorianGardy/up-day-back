@@ -15,9 +15,12 @@ describe("# Auth JWT pluggin", () => {
     });
   });
 
-  it("should responds with 400 when headers is missing", async () => {
+  it.only("should responds with 400 when headers is missing", async () => {
     await server.register({
-      plugin: require("../src/plugins/authJwt")
+      plugin: require("../src/plugins/authJwt"),
+      options: {
+        validate: () => "myUuid"
+      }
     });
 
     server.route({
@@ -38,7 +41,33 @@ describe("# Auth JWT pluggin", () => {
     should(res.statusCode).equal(400);
   });
 
-  it("should responds with 200 and the handler has an access to req.auth.credentials (JWToken & uuid) when the header.athorization is set", async () => {
+  it.only("should responds with 403 when the token is incorrect", async () => {
+    await server.register({
+      plugin: require("../src/plugins/authJwt"),
+      options: {
+        validate: () => null
+      }
+    });
+
+    server.route({
+      method: "GET",
+      path: "/random",
+      options: {
+        auth: AUTH_JWT
+      },
+      handler: function() {
+        return "hello";
+      }
+    });
+
+    const res = await server.inject({
+      method: "GET",
+      url: "/random"
+    });
+    should(res.statusCode).equal(400);
+  });
+
+  it.only("should responds with 200 and the handler has an access to req.auth.credentials (JWToken & uuid) when the header.athorization is set", async () => {
     await server.register({
       plugin: require("../src/plugins/authJwt"),
       options: {

@@ -6,13 +6,13 @@ const scheme = function(server, { validate }) {
     authenticate: async function(request, h) {
       const JWToken = request.headers.authorization;
       if (!JWToken) {
-        throw Boom.badRequest("Missing token", "Custom-JWT");
+        return h.unauthenticated(Boom.badRequest("Missing token"));
       }
       const uuid = await validate(JWToken);
       if (uuid) {
         return h.authenticated({ credentials: { JWToken, uuid } });
       } else {
-        throw Boom.badRequest("This user doesn't exist", "Custom-JWT");
+        return h.unauthenticated(Boom.unauthorized("invalid token"));
       }
     }
   };
