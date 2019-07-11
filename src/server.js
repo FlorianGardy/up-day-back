@@ -6,6 +6,7 @@ const Hapi = require("@hapi/hapi");
 
 const User = require("./db/user/user.model");
 const Event = require("./db/event/event.model");
+const { createAdmin } = require("./db/user/createAdmin");
 
 const server = Hapi.server({
   port: 3030,
@@ -65,13 +66,16 @@ exports.start = async () => {
   // Database
   const sequelize = require("./db/connect");
   try {
-    await sequelize.sync();
-
     await sequelize.authenticate();
     console.log("Connection has been established successfully.");
   } catch (err) {
     console.error("Unable to connect to the database:", err);
   }
+
+  await sequelize.sync(); // Synchronize server data model with database tables
+
+  const adminAccount = await createAdmin(); // Create admin account if no user axists in the database
+  console.log(adminAccount);
 
   await registerPlugins();
   await registerRoutes();
