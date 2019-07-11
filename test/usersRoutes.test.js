@@ -14,17 +14,7 @@ describe("# Users routes", () => {
   });
 
   describe("## GET /users", () => {
-    it("should return the code 200 and an empty array if no user has been created yet", async () => {
-      const res = await server.inject({
-        method: "GET",
-        url: "/users"
-      });
-      const payload = JSON.parse(res.payload);
-      should(res.statusCode).equal(200);
-      should(payload).deepEqual([]);
-    });
-
-    it("should return the code 200 an array containing 2 users if 2 users exist in the database", async () => {
+    it("should return the code 200 an array containing all the users existing in the database", async () => {
       const user1 = {
         uuid: "1753df50-9cbf-11e9-bf9b-6da555a5236b",
         name: "Jojo",
@@ -47,16 +37,42 @@ describe("# Users routes", () => {
 
       const res = await server.inject({
         method: "GET",
-        url: "/users"
+        url: "/users",
+        headers: {
+          authorization: "myToken1"
+        }
       });
 
       should(res.statusCode).equal(200);
       should(JSON.parse(res.payload)).match([user1, user2]);
     });
+
+    it("should return the code 403 if the token provided in the hearder doesn't exist in the database", async () => {
+      const res = await server.inject({
+        method: "GET",
+        url: "/users",
+        payload: {},
+        headers: {
+          authorization: "anInvalidToken"
+        }
+      });
+
+      should(res.statusCode).equal(403);
+    });
   });
 
   describe("## POST /users", () => {
     it("should return the code 200 and the user just created if the payload is properly field and the user doesn't already exists in the database", async () => {
+      const user = {
+        uuid: "12345678-1234-1234-1234-123456789012",
+        name: "anyName",
+        password: "anyPassword",
+        email: "anyMail@gmail.com",
+        role: "admin",
+        token: "aValidToken"
+      };
+      await User.create(user);
+
       const res = await server.inject({
         method: "POST",
         url: "/users",
@@ -65,6 +81,9 @@ describe("# Users routes", () => {
           password: "1234",
           email: "Jiji@gmail.com",
           role: "admin"
+        },
+        headers: {
+          authorization: "aValidToken"
         }
       });
 
@@ -77,39 +96,67 @@ describe("# Users routes", () => {
     });
 
     it("should return the code 400 if the payload is not properly filled", async () => {
+      const user = {
+        uuid: "12345678-1234-1234-1234-123456789012",
+        name: "anyName",
+        password: "anyPassword",
+        email: "anyMail@gmail.com",
+        role: "admin",
+        token: "aValidToken"
+      };
+      await User.create(user);
+
       const res = await server.inject({
         method: "POST",
         url: "/users",
-        payload: {}
+        payload: {},
+        headers: {
+          authorization: "aValidToken"
+        }
       });
 
       should(res.statusCode).equal(400);
     });
 
     it("should return the code 400 if the user already exist in the database", async () => {
-      await server.inject({
-        method: "POST",
-        url: "/users",
-        payload: {
-          name: "Jiji",
-          password: "1234",
-          email: "Jiji@gmail.com",
-          role: "admin"
-        }
-      });
+      const user = {
+        uuid: "12345678-1234-1234-1234-123456789012",
+        name: "anyName",
+        password: "anyPassword",
+        email: "anyMail@gmail.com",
+        role: "admin",
+        token: "aValidToken"
+      };
+      await User.create(user);
 
       const res = await server.inject({
         method: "POST",
         url: "/users",
         payload: {
-          name: "Jiji",
-          password: "1234",
-          email: "Jiji@gmail.com",
+          name: "anyName",
+          password: "anyPassword",
+          email: "anyMail@gmail.com",
           role: "admin"
+        },
+        headers: {
+          authorization: "aValidToken"
         }
       });
 
       should(res.statusCode).equal(400);
+    });
+
+    it("should return the code 403 if the token provided in the hearder doesn't exist in the database", async () => {
+      const res = await server.inject({
+        method: "POST",
+        url: "/users",
+        payload: {},
+        headers: {
+          authorization: "toto"
+        }
+      });
+
+      should(res.statusCode).equal(403);
     });
   });
 
@@ -128,7 +175,10 @@ describe("# Users routes", () => {
       const res = await server.inject({
         method: "DELETE",
         url: "/users/1753df50-9cbf-11e9-bf9b-6da555a523dd",
-        payload: {}
+        payload: {},
+        headers: {
+          authorization: "tok"
+        }
       });
 
       should(res.statusCode).equal(200);
@@ -136,14 +186,40 @@ describe("# Users routes", () => {
     });
 
     it("should return the code 200 and the message '0' if the user doesn't exist in the database", async () => {
+      const user = {
+        uuid: "12345678-1234-1234-1234-123456789012",
+        name: "anyName",
+        password: "anyPassword",
+        email: "anyMail@gmail.com",
+        role: "admin",
+        token: "aValidToken"
+      };
+      await User.create(user);
+
       const res = await server.inject({
         method: "DELETE",
         url: "/users/1753df50-9cbf-11e9-bf9b-6da555a523dd",
-        payload: {}
+        payload: {},
+        headers: {
+          authorization: "aValidToken"
+        }
       });
 
       should(res.statusCode).equal(200);
       should(res.payload).equal("0");
+    });
+
+    it("should return the code 403 if the token provided in the hearder doesn't exist in the database", async () => {
+      const res = await server.inject({
+        method: "DELETE",
+        url: "/users/1753df50-9cbf-11e9-bf9b-6da555a523dd",
+        payload: {},
+        headers: {
+          authorization: "toto"
+        }
+      });
+
+      should(res.statusCode).equal(403);
     });
   });
 });

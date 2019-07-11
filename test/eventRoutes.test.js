@@ -16,10 +16,23 @@ describe("# Events routes", () => {
 
   describe("## GET /events", () => {
     it("should return the code 200 and an empty array if no event has been created", async () => {
+      const user = {
+        uuid: "23144200-a195-11e9-be71-915c08fe32a4",
+        name: "Chuck",
+        password: "Norris",
+        email: "myMail@gmail.com",
+        role: "standard",
+        token: "tok"
+      };
+      await User.create(user);
+
       const res = await server.inject({
         method: "GET",
         url: "/events",
-        payload: {}
+        payload: {},
+        headers: {
+          authorization: "tok"
+        }
       });
 
       should(res.statusCode).equal(200);
@@ -59,11 +72,27 @@ describe("# Events routes", () => {
       await Event.create(event2);
       const res = await server.inject({
         method: "GET",
-        url: "/events"
+        url: "/events",
+        headers: {
+          authorization: "tok"
+        }
       });
       const payload = JSON.parse(res.payload);
       should(res.statusCode).equal(200);
       should(payload).match([event1, event2]);
+    });
+
+    it("should return the code 403 if the token provided in the hearder doesn't exist in the database", async () => {
+      const res = await server.inject({
+        method: "GET",
+        url: "/events",
+        payload: {},
+        headers: {
+          authorization: "toto"
+        }
+      });
+
+      should(res.statusCode).equal(403);
     });
   });
 
@@ -102,7 +131,10 @@ describe("# Events routes", () => {
       await Event.create(event2);
       const res = await server.inject({
         method: "GET",
-        url: "/events/23144200-a195-11e9-be71-915c08fe32a4"
+        url: "/events/23144200-a195-11e9-be71-915c08fe32a4",
+        headers: {
+          authorization: "tok"
+        }
       });
       should(res.statusCode).equal(200);
       const payload = JSON.parse(res.payload);
@@ -110,21 +142,60 @@ describe("# Events routes", () => {
     });
 
     it("should return the code 200 an empty array if the given uuid doesn't exist", async () => {
+      const user = {
+        uuid: "23144200-a195-11e9-be71-915c08fe32a4",
+        name: "Chuck",
+        password: "Norris",
+        email: "myMail@gmail.com",
+        role: "standard",
+        token: "tok"
+      };
+      await User.create(user);
+
       const res = await server.inject({
         method: "GET",
-        url: "/events/23144200-a195-11e9-be71-915c08fe32a4"
+        url: "/events/23144200-a195-11e9-be71-915c08fe32a4",
+        headers: {
+          authorization: "tok"
+        }
       });
       should(res.statusCode).equal(200);
       should(JSON.parse(res.payload)).deepEqual([]);
+    });
+
+    it("should return the code 403 if the token provided in the hearder doesn't exist in the database", async () => {
+      const res = await server.inject({
+        method: "GET",
+        url: "/events/23144200-a195-11e9-be71-915c08fe32a4",
+        payload: {},
+        headers: {
+          authorization: "toto"
+        }
+      });
+
+      should(res.statusCode).equal(403);
     });
   });
 
   describe("## POST /events", () => {
     it("should return the code 400 if the payload is not properly filled", async () => {
+      const user = {
+        uuid: "23144200-a195-11e9-be71-915c08fe32a4",
+        name: "Chuck",
+        password: "Norris",
+        email: "myMail@gmail.com",
+        role: "standard",
+        token: "tok"
+      };
+      await User.create(user);
+
       const res = await server.inject({
         method: "POST",
         url: "/events",
-        payload: {}
+        payload: {},
+        headers: {
+          authorization: "tok"
+        }
       });
       should(res.statusCode).equal(400);
     });
@@ -152,7 +223,10 @@ describe("# Events routes", () => {
       const res = await server.inject({
         method: "POST",
         url: "/events",
-        payload: event
+        payload: event,
+        headers: {
+          authorization: "tok"
+        }
       });
 
       should(res.statusCode).equal(200);
@@ -161,13 +235,39 @@ describe("# Events routes", () => {
         context: event.context.split("|")
       });
     });
+
+    it("should return the code 403 if the token provided in the hearder doesn't exist in the database", async () => {
+      const res = await server.inject({
+        method: "POST",
+        url: "/events",
+        payload: {},
+        headers: {
+          authorization: "toto"
+        }
+      });
+
+      should(res.statusCode).equal(403);
+    });
   });
 
   describe("## DELETE /events/{id}", () => {
     it("should return the code 200 and the message '0' if the event doesn't exist in the database", async () => {
+      const user = {
+        uuid: "23144200-a195-11e9-be71-915c08fe32a4",
+        name: "Chuck",
+        password: "Norris",
+        email: "myMail@gmail.com",
+        role: "standard",
+        token: "tok"
+      };
+      await User.create(user);
+
       const res = await server.inject({
         method: "DELETE",
-        url: "/events/1"
+        url: "/events/1",
+        headers: {
+          authorization: "tok"
+        }
       });
       should(res.statusCode).equal(200);
       should(res.payload).equal("0");
@@ -197,10 +297,26 @@ describe("# Events routes", () => {
 
       const res = await server.inject({
         method: "DELETE",
-        url: "/events/1"
+        url: "/events/1",
+        headers: {
+          authorization: "tok"
+        }
       });
       should(res.statusCode).equal(200);
       should(res.payload).equal("1");
+    });
+
+    it("should return the code 403 if the token provided in the hearder doesn't exist in the database", async () => {
+      const res = await server.inject({
+        method: "GET",
+        url: "/events",
+        payload: {},
+        headers: {
+          authorization: "toto"
+        }
+      });
+
+      should(res.statusCode).equal(403);
     });
   });
 });

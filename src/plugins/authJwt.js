@@ -6,13 +6,13 @@ const scheme = function(server, { validate }) {
     authenticate: async function(request, h) {
       const JWToken = request.headers.authorization;
       if (!JWToken) {
-        return h.unauthenticated(Boom.badRequest("Missing token"));
+        return h.unauthenticated(Boom.forbidden("Missing token"));
       }
       const uuid = await validate(JWToken);
       if (uuid) {
         return h.authenticated({ credentials: { JWToken, uuid } });
       } else {
-        return h.unauthenticated(Boom.unauthorized("invalid token"));
+        return h.unauthenticated(Boom.forbidden("invalid token"));
       }
     }
   };
@@ -27,6 +27,6 @@ module.exports = {
   register: async function(server, options) {
     server.auth.scheme("Custom-JWT", scheme);
     server.auth.strategy(AUTH_JWT, "Custom-JWT", options);
-    // server.auth.default("default");
+    server.auth.default(AUTH_JWT);
   }
 };

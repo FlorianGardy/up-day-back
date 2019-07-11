@@ -5,9 +5,6 @@ module.exports = [
   {
     method: "GET",
     path: "/events",
-    options: {
-      auth: false
-    },
     handler: async function() {
       try {
         return await Event.findAll();
@@ -32,7 +29,6 @@ module.exports = [
       }
     },
     options: {
-      auth: false,
       validate: {
         params: {
           uuid: Joi.string().required()
@@ -57,7 +53,6 @@ module.exports = [
       }
     },
     options: {
-      auth: false,
       validate: {
         payload: {
           date: Joi.string().required(),
@@ -87,7 +82,6 @@ module.exports = [
       }
     },
     options: {
-      auth: false,
       validate: {
         params: {
           id: Joi.number()

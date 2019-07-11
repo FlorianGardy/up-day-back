@@ -8,9 +8,6 @@ module.exports = [
   {
     method: "GET",
     path: "/users",
-    options: {
-      auth: false
-    },
     handler: async function() {
       try {
         return await User.findAll();
@@ -68,7 +65,6 @@ module.exports = [
       }
     },
     options: {
-      auth: false,
       validate: {
         payload: {
           name: Joi.string().required(),
@@ -82,9 +78,6 @@ module.exports = [
   {
     method: "DELETE",
     path: "/users/{uuid}",
-    options: {
-      auth: false
-    },
     handler: async function(request, h) {
       try {
         const { uuid } = request.params;
