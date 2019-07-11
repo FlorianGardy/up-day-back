@@ -61,6 +61,72 @@ describe("# Users routes", () => {
     });
   });
 
+  describe("## GET /users", () => {
+    it("should return the code 200 and an object containing the user info if the user exists", async () => {
+      const user = {
+        uuid: "12345678-1234-1234-1234-123456789012",
+        name: "anyName",
+        password: "anyPassword",
+        email: "anyMail@gmail.com",
+        role: "admin",
+        token: "aValidToken"
+      };
+      await User.create(user);
+
+      const res = await server.inject({
+        method: "GET",
+        url: "/users/12345678-1234-1234-1234-123456789012",
+        headers: {
+          authorization: "aValidToken"
+        }
+      });
+
+      should(res.statusCode).equal(200);
+      should(JSON.parse(res.payload)).match({
+        uuid: "12345678-1234-1234-1234-123456789012",
+        name: "anyName",
+        email: "anyMail@gmail.com",
+        role: "admin"
+      });
+    });
+
+    it("should return the code 200 and 'null' if the user doesn't exist", async () => {
+      const user = {
+        uuid: "12345678-1234-1234-1234-123456789012",
+        name: "anyName",
+        password: "anyPassword",
+        email: "anyMail@gmail.com",
+        role: "admin",
+        token: "aValidToken"
+      };
+      await User.create(user);
+
+      const res = await server.inject({
+        method: "GET",
+        url: "/users/12345678-1234-1234-1234-111111111111",
+        headers: {
+          authorization: "aValidToken"
+        }
+      });
+
+      should(res.statusCode).equal(200);
+      should(res.payload).equal("");
+    });
+
+    it("should return the code 403 if the token provided in the hearder doesn't exist in the database", async () => {
+      const res = await server.inject({
+        method: "GET",
+        url: "/users/12345678-1234-1234-1234-111111111111",
+        payload: {},
+        headers: {
+          authorization: "anInvalidToken"
+        }
+      });
+
+      should(res.statusCode).equal(403);
+    });
+  });
+
   describe("## POST /users", () => {
     it("should return the code 200 and the user just created if the payload is properly field and the user doesn't already exists in the database", async () => {
       const user = {

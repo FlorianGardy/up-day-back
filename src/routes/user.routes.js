@@ -18,6 +18,29 @@ module.exports = [
   },
 
   {
+    method: "GET",
+    path: "/users/{uuid}",
+    handler: async function(request, h) {
+      const { uuid } = request.params;
+      try {
+        return await User.findOne({
+          attributes: [
+            "uuid",
+            "name",
+            "email",
+            "role",
+            "createdAt",
+            "updatedAt"
+          ],
+          where: { uuid }
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  },
+
+  {
     method: "POST",
     path: "/users",
     handler: async function(request, h) {
