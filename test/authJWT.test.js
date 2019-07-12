@@ -62,7 +62,10 @@ describe("# Auth JWT pluggin", () => {
 
     const res = await server.inject({
       method: "GET",
-      url: "/random"
+      url: "/random",
+      headers: {
+        authorization: "wrongToken"
+      }
     });
     should(res.statusCode).equal(403);
   });
