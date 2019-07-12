@@ -1,5 +1,6 @@
 const Joi = require("@hapi/joi");
 const User = require("../db/user/user.model");
+const sequelize = require("../db/connect");
 const jwt = require("jsonwebtoken");
 const uuidv1 = require("uuid/v1");
 const bcrypt = require("bcrypt");
@@ -37,6 +38,23 @@ module.exports = [
       } catch (err) {
         console.log(err);
       }
+    }
+  },
+
+  {
+    method: "GET",
+    path: "/users/{uuid}/events",
+    handler: async function(request, h) {
+      const { uuid } = request.params;
+      try {
+        const user = await User.findOne({ where: { uuid } });
+        return await user.getEvents();
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    options: {
+      auth: false
     }
   },
 
