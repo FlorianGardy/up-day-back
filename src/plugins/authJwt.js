@@ -12,7 +12,7 @@ const scheme = function(server, { validate }) {
       if (uuid) {
         return h.authenticated({ credentials: { JWToken, uuid } });
       } else {
-        return h.unauthenticated(Boom.forbidden("invalid token"));
+        return h.unauthenticated(Boom.forbidden("Invalid token"));
       }
     }
   };
