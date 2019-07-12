@@ -23,7 +23,7 @@ async function createAdmin() {
 
     // Build token
     const token = await jwt.sign(
-      { uuid, name, hashedPassword, email },
+      { uuid, name, password, email },
       process.env.SERVER_JWT_SECRET
     );
 
@@ -42,6 +42,4 @@ async function createAdmin() {
   }
 }
 
-module.exports = {
-  createAdmin
-};
+module.exports = createAdmin;
