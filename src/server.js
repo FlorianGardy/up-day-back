@@ -65,7 +65,11 @@ exports.init = async () => {
 
 exports.start = async () => {
   // Database
-  initDatabase({ clearTables: false, testConnection: true, checkAdmin: true });
+  await initDatabase({
+    clearTables: false,
+    testConnection: true,
+    checkAdmin: true
+  });
 
   await registerPlugins();
   await registerRoutes();

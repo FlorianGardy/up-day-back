@@ -11,14 +11,15 @@ async function initDatabase(options) {
       console.log("Connection has been established successfully.");
     } catch (err) {
       console.error("Unable to connect to the database:", err);
-      return false;
+      process.exit();
     }
   }
 
   // Model definition
-  await require("./user/user.model");
-  await require("./event/event.model");
-  // TODO: Add associations
+  const User = await require("./user/user.model");
+  const Event = await require("./event/event.model");
+  Event.belongsTo(User, { foreignKey: "uuid", targetKey: "uuid" });
+  User.hasMany(Event, { foreignKey: "uuid", sourceKey: "uuid" });
 
   // Synchronize server data model with database
   const syncOption = clearTables ? { force: true } : null;

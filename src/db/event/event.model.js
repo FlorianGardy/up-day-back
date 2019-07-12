@@ -41,6 +41,4 @@ const Event = sequelize.define(
   }
 );
 
-Event.belongsTo(User, { foreignKey: "uuid", targetKey: "uuid" });
-
 module.exports = Event;
