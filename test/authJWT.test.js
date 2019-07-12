@@ -67,7 +67,7 @@ describe("# Auth JWT pluggin", () => {
     should(res.statusCode).equal(403);
   });
 
-  it("should responds with 200 and the handler has an access to req.auth.credentials (JWToken & uuid) when the header.athorization is set", async () => {
+  it("should responds with 200 and the handler has an access to req.auth.credentials (token & uuid) when the header.athorization is set", async () => {
     await server.register({
       plugin: require("../src/plugins/authJwt"),
       options: {
@@ -82,7 +82,7 @@ describe("# Auth JWT pluggin", () => {
         auth: AUTH_JWT
       },
       handler: function(req) {
-        should(req.auth.credentials.JWToken).equal("coucou");
+        should(req.auth.credentials.token).equal("coucou");
         should(req.auth.credentials.uuid).equal("myUuid");
         return "yo";
       }

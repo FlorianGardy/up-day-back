@@ -21,10 +21,10 @@ async function registerPlugins() {
   await server.register({
     plugin: require("./plugins/authJwt"),
     options: {
-      validate: async JWToken => {
+      validate: async token => {
         try {
           const userInstance = await User.findOne({
-            where: { token: JWToken },
+            where: { token: token },
             attributes: ["uuid"]
           });
 

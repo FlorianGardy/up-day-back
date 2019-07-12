@@ -45,7 +45,9 @@ module.exports = [
     path: "/users",
     handler: async function(request, h) {
       try {
-        const { name, password, email, role } = { ...request.payload };
+        const { name, password: rawPassword, email, role } = {
+          ...request.payload
+        };
 
         // Check if the name already exists in the database
         const nameExist = await User.findOne({
@@ -65,11 +67,11 @@ module.exports = [
 
         // Generates hashed password
         const saltRounds = 10;
-        let hashedPassword = await bcrypt.hash(password, saltRounds);
+        let password = await bcrypt.hash(rawPassword, saltRounds);
 
         // Generates JSON Web Token
-        const JWToken = await jwt.sign(
-          { uuid, name, hashedPassword, email },
+        const token = await jwt.sign(
+          { uuid, name, password, email },
           process.env.SERVER_JWT_SECRET
         );
 
@@ -77,10 +79,10 @@ module.exports = [
         const user = {
           uuid,
           name,
-          password: hashedPassword,
+          password,
           email,
           role,
-          token: JWToken
+          token
         };
         return await User.create(user);
       } catch (err) {

@@ -4,13 +4,13 @@ const Boom = require("@hapi/boom");
 const scheme = function(server, { validate }) {
   return {
     authenticate: async function(request, h) {
-      const JWToken = request.headers.authorization;
-      if (!JWToken) {
+      const token = request.headers.authorization;
+      if (!token) {
         return h.unauthenticated(Boom.forbidden("Missing token"));
       }
-      const uuid = await validate(JWToken);
+      const uuid = await validate(token);
       if (uuid) {
-        return h.authenticated({ credentials: { JWToken, uuid } });
+        return h.authenticated({ credentials: { token, uuid } });
       } else {
         return h.unauthenticated(Boom.forbidden("Invalid token"));
       }

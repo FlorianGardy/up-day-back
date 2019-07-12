@@ -10,16 +10,19 @@ async function createAdmin() {
 
     // Else, create an admin user
     const name = "admin";
-    const password = "admin";
+    const rawPassword = "admin";
     const email = "admin@upday.com";
     const role = "admin";
 
+    // Build uuid
     const uuid = uuidv1();
 
+    // build password
     const saltRounds = 10;
-    let hashedPassword = await bcrypt.hash(password, saltRounds);
+    let password = await bcrypt.hash(rawPassword, saltRounds);
 
-    const JWToken = await jwt.sign(
+    // Build token
+    const token = await jwt.sign(
       { uuid, name, hashedPassword, email },
       process.env.SERVER_JWT_SECRET
     );
@@ -27,9 +30,9 @@ async function createAdmin() {
     const user = {
       uuid,
       name,
-      password: hashedPassword,
+      password,
       role,
-      token: JWToken
+      token
     };
     await User.create(user);
 
