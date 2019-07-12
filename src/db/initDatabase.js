@@ -1,9 +1,7 @@
 const sequelize = require("./connect");
 const createAdmin = require("./user/createAdmin");
 
-async function initDatabase(options) {
-  const { testConnection, clearTables, checkAdmin } = options;
-
+async function initDatabase({ testConnection, clearTables, checkAdmin }) {
   // Test the connection to the database
   if (testConnection) {
     try {
