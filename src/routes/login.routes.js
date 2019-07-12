@@ -10,7 +10,7 @@ module.exports = [
       try {
         const { name, password } = request.payload;
 
-        const userInstance = await User.findOne({
+        const user = await User.findOne({
           where: { name }
         });
 
@@ -20,9 +20,7 @@ module.exports = [
           error: "Bad Request",
           message: "This user doesn't exist or the password is incorrect"
         };
-        if (!userInstance) return h.response(wrongUserMessage).code(400);
-
-        const user = userInstance.get({ plain: true });
+        if (!user) return h.response(wrongUserMessage).code(400);
 
         // Check if the password provide matches the one saved in db
         const passwordIsValid = await bcrypt.compare(password, user.password);
