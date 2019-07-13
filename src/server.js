@@ -23,10 +23,7 @@ async function registerPlugins() {
       validate: async token => {
         try {
           const user = await User.findOne({ where: { token } });
-
-          if (user) {
-            return user.uuid;
-          }
+          if (user) return user.uuid;
         } catch (error) {
           console.log(error);
         }
