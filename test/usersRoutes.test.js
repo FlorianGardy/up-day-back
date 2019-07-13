@@ -1,6 +1,7 @@
 const should = require("should");
 const { init } = require("../src/server");
 const User = require("../src/db/user/user.model");
+const Event = require("../src/db/event/event.model");
 
 describe("# Users routes", () => {
   let server;
@@ -117,6 +118,65 @@ describe("# Users routes", () => {
       const res = await server.inject({
         method: "GET",
         url: "/users/12345678-1234-1234-1234-111111111111",
+        payload: {},
+        headers: {
+          authorization: "anInvalidToken"
+        }
+      });
+
+      should(res.statusCode).equal(403);
+    });
+  });
+
+  describe("## GET /users/{uuid}/events", () => {
+    it("should return the code 200 and an array containing the user events if the user exists", async () => {
+      const user = {
+        uuid: "12345678-1234-1234-1234-123456789012",
+        name: "anyName",
+        password: "anyPassword",
+        email: "anyMail@gmail.com",
+        role: "admin",
+        token: "aValidToken"
+      };
+      await User.create(user);
+
+      const event1 = {
+        date: "2019-06-04T12:59:00.000Z",
+        type: "pipi",
+        nature: "normale",
+        volume: "+++",
+        context: ["fuite", "urgence"],
+        comment: "pipi",
+        uuid: "12345678-1234-1234-1234-123456789012"
+      };
+      const event2 = {
+        date: "2019-06-05T13:59:00.000Z",
+        type: "pipi",
+        nature: "mitigé",
+        volume: "+",
+        context: ["fuite", "urgence"],
+        comment: "gros pipi",
+        uuid: "12345678-1234-1234-1234-123456789012"
+      };
+      await Event.create(event1);
+      await Event.create(event2);
+
+      const res = await server.inject({
+        method: "GET",
+        url: "/users/12345678-1234-1234-1234-123456789012/events",
+        headers: {
+          authorization: "aValidToken"
+        }
+      });
+
+      should(res.statusCode).equal(200);
+      should(JSON.parse(res.payload)).match([event1, event2]);
+    });
+
+    it("should return the code 403 if the token provided in the hearder doesn't exist in the database", async () => {
+      const res = await server.inject({
+        method: "GET",
+        url: "/users/12345678-1234-1234-1234-123456789012/events",
         payload: {},
         headers: {
           authorization: "anInvalidToken"

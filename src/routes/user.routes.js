@@ -52,9 +52,6 @@ module.exports = [
       } catch (err) {
         console.log(err);
       }
-    },
-    options: {
-      auth: false
     }
   },
 
