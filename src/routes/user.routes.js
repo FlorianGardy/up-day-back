@@ -1,4 +1,5 @@
 const Joi = require("@hapi/joi");
+const Boom = require("@hapi/boom");
 const User = require("../db/user/user.model");
 const sequelize = require("../db/connect");
 const jwt = require("jsonwebtoken");
@@ -9,8 +10,14 @@ module.exports = [
   {
     method: "GET",
     path: "/users",
-    handler: async function() {
+    handler: async function(request, h) {
       try {
+        // Throw an error 403 if the requestor is not admin
+        const isAdmin = await User.findOne({
+          where: { uuid: request.auth.credentials.uuid, role: "admin" }
+        });
+        if (!isAdmin) return Boom.forbidden("Admin only !!");
+
         return await User.findAll();
       } catch (err) {
         console.log(err);
@@ -24,6 +31,12 @@ module.exports = [
     handler: async function(request, h) {
       const { uuid } = request.params;
       try {
+        // Throw an error 403 if the requestor is not admin
+        const isAdmin = await User.findOne({
+          where: { uuid: request.auth.credentials.uuid, role: "admin" }
+        });
+        if (!isAdmin) return Boom.forbidden("Admin only !!");
+
         return await User.findOne({
           attributes: [
             "uuid",
@@ -45,6 +58,12 @@ module.exports = [
     method: "GET",
     path: "/users/{uuid}/events",
     handler: async function(request, h) {
+      // Throw an error 403 if the requestor is not admin
+      const isAdmin = await User.findOne({
+        where: { uuid: request.auth.credentials.uuid, role: "admin" }
+      });
+      if (!isAdmin) return Boom.forbidden("Admin only !!");
+
       const { uuid } = request.params;
       try {
         const user = await User.findOne({ where: { uuid } });
@@ -60,6 +79,12 @@ module.exports = [
     path: "/users",
     handler: async function(request, h) {
       try {
+        // Throw an error 403 if the requestor is not admin
+        const isAdmin = await User.findOne({
+          where: { uuid: request.auth.credentials.uuid, role: "admin" }
+        });
+        if (!isAdmin) return Boom.forbidden("Admin only !!");
+
         const { name, password: rawPassword, email, role } = {
           ...request.payload
         };
@@ -119,6 +144,12 @@ module.exports = [
     method: "DELETE",
     path: "/users/{uuid}",
     handler: async function(request, h) {
+      // Throw an error 403 if the requestor is not admin
+      const isAdmin = await User.findOne({
+        where: { uuid: request.auth.credentials.uuid, role: "admin" }
+      });
+      if (!isAdmin) return Boom.forbidden("Admin only !!");
+
       try {
         const { uuid } = request.params;
         return await User.destroy({ where: { uuid } });
