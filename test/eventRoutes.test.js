@@ -376,7 +376,7 @@ describe("# Events routes", () => {
       should(res.payload).equal("0");
     });
 
-    it("should return the code 200 and the message '1' if the event has been successfuly deleted", async () => {
+    it("should return the code 200 and the message '1' if the event has been successfuly deleted and the uuid of the event to delete is the same as the one in the token", async () => {
       const user = {
         uuid: "23144200-a195-11e9-be71-915c08fe32a4",
         name: "Chuck",
@@ -407,6 +407,47 @@ describe("# Events routes", () => {
       });
       should(res.statusCode).equal(200);
       should(res.payload).equal("1");
+    });
+
+    it("should return the code 400 if the uuid of the event to delete is different from the one in the token", async () => {
+      const user1 = {
+        uuid: "12345678-1234-1234-1234-123456789012",
+        name: "Chuck",
+        password: "Norris",
+        email: "myMail@gmail.com",
+        role: "standard",
+        token: "tok1"
+      };
+      const user2 = {
+        uuid: "23144200-a195-11e9-be71-915c08fe32a4",
+        name: "Patrick",
+        password: "Sebastien",
+        email: "myMail@gmail.com",
+        role: "standard",
+        token: "tok2"
+      };
+      await User.create(user1);
+      await User.create(user2);
+
+      const event = {
+        date: "2019-06-04T12:59:00.000Z",
+        type: "pipi",
+        nature: "normale",
+        volume: "+++",
+        context: ["fuite", "urgence"],
+        comment: "pipi",
+        uuid: "12345678-1234-1234-1234-123456789012"
+      };
+      await Event.create(event);
+
+      const res = await server.inject({
+        method: "DELETE",
+        url: "/events/1",
+        headers: {
+          authorization: "tok2"
+        }
+      });
+      should(res.statusCode).equal(400);
     });
 
     it("should return the code 403 if the token provided in the hearder doesn't exist in the database", async () => {

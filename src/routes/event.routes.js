@@ -89,6 +89,16 @@ module.exports = [
     handler: async function(request, h) {
       try {
         const eventId = request.params.id;
+
+        // If the uuid of the event to delete is different from the the one from the token, throw error 400
+        const eventToDelete = await Event.findOne({ where: { id: eventId } });
+        if (
+          eventToDelete &&
+          request.auth.credentials.uuid !== eventToDelete.uuid
+        ) {
+          return Boom.badRequest("invalid uuid");
+        }
+
         return await Event.destroy({
           where: {
             id: eventId
