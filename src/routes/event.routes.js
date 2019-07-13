@@ -1,5 +1,6 @@
 const Event = require("../db/event/event.model");
 const Joi = require("@hapi/joi");
+const Boom = require("@hapi/boom");
 const User = require("../db/user/user.model");
 
 module.exports = [
@@ -51,6 +52,11 @@ module.exports = [
     path: "/events",
     handler: async function(request, h) {
       try {
+        // If the uuid from the payload is different from the the one from the token, throw error 400
+        if (request.auth.credentials.uuid !== request.payload.uuid) {
+          return Boom.badRequest("invalid uuid");
+        }
+
         if (request.payload.context || request.payload.context === "") {
           request.payload = {
             ...request.payload,
