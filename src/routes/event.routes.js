@@ -1,27 +1,36 @@
 const Event = require("../db/event/event.model");
 const Joi = require("@hapi/joi");
+const User = require("../db/user/user.model");
 
 module.exports = [
   {
     method: "GET",
     path: "/events",
-    handler: async function() {
+    handler: async function(request, h) {
+      const isAdmin = await User.findOne({
+        where: { uuid: request.auth.credentials.uuid, role: "admin" }
+      });
       try {
-        return await Event.findAll();
+        return isAdmin
+          ? await Event.findAll()
+          : await Event.findAll({
+              where: { uuid: request.auth.credentials.uuid }
+            });
       } catch (err) {
         console.log(err);
       }
     }
   },
+
   {
     method: "GET",
     path: "/events/{uuid}",
-    handler: async function(request) {
+    handler: async function(request, h) {
       try {
-        const uuid = request.params.uuid;
+        const { uuid } = request.params;
         return await Event.findAll({
           where: {
-            uuid: uuid
+            uuid
           }
         });
       } catch (err) {
@@ -36,6 +45,7 @@ module.exports = [
       }
     }
   },
+
   {
     method: "POST",
     path: "/events",
@@ -66,6 +76,7 @@ module.exports = [
       }
     }
   },
+
   {
     method: "DELETE",
     path: "/events/{id}",
