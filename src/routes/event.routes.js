@@ -13,9 +13,10 @@ module.exports = [
       });
       try {
         return isAdmin
-          ? await Event.findAll()
+          ? await Event.findAll({ order: [["date", "ASC"]] })
           : await Event.findAll({
-              where: { uuid: request.auth.credentials.uuid }
+              where: { uuid: request.auth.credentials.uuid },
+              order: [["date", "ASC"]]
             });
       } catch (err) {
         console.log(err);

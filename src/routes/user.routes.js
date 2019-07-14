@@ -1,6 +1,7 @@
 const Joi = require("@hapi/joi");
 const Boom = require("@hapi/boom");
 const User = require("../db/user/user.model");
+const Event = require("../db/event/event.model");
 const sequelize = require("../db/connect");
 const jwt = require("jsonwebtoken");
 const uuidv1 = require("uuid/v1");
