@@ -15,7 +15,7 @@ describe("# Users routes", () => {
   });
 
   describe("## GET /users", () => {
-    it("should return the code 200 an array containing all the users existing in the database", async () => {
+    it("should return the code 200 and an array containing all the users existing in the database if the requestor is admin", async () => {
       const user1 = {
         uuid: "1753df50-9cbf-11e9-bf9b-6da555a5236b",
         name: "Jojo",
@@ -60,10 +60,33 @@ describe("# Users routes", () => {
 
       should(res.statusCode).equal(403);
     });
+
+    it("should return the code 403 if the requestor is not admin", async () => {
+      const user = {
+        uuid: "12345678-1234-1234-1234-123456789012",
+        name: "anyName",
+        password: "anyPassword",
+        email: "anyMail@gmail.com",
+        role: "standard",
+        token: "aValidToken"
+      };
+      await User.create(user);
+
+      const res = await server.inject({
+        method: "GET",
+        url: "/users",
+        payload: {},
+        headers: {
+          authorization: "aValidToken"
+        }
+      });
+
+      should(res.statusCode).equal(403);
+    });
   });
 
-  describe("## GET /users", () => {
-    it("should return the code 200 and an object containing the user info if the user exists", async () => {
+  describe("## GET /users/{uuid}", () => {
+    it("should return the code 200 and an object containing the user info if the user exists and if the requestor is admin", async () => {
       const user = {
         uuid: "12345678-1234-1234-1234-123456789012",
         name: "anyName",
@@ -91,7 +114,7 @@ describe("# Users routes", () => {
       });
     });
 
-    it("should return the code 200 and 'null' if the user doesn't exist", async () => {
+    it("should return the code 200 and 'null' if the user doesn't exist and if the requestor is admin", async () => {
       const user = {
         uuid: "12345678-1234-1234-1234-123456789012",
         name: "anyName",
@@ -126,10 +149,33 @@ describe("# Users routes", () => {
 
       should(res.statusCode).equal(403);
     });
+
+    it("should return the code 403 if the requestor is not admin", async () => {
+      const user = {
+        uuid: "12345678-1234-1234-1234-123456789012",
+        name: "anyName",
+        password: "anyPassword",
+        email: "anyMail@gmail.com",
+        role: "standard",
+        token: "aValidToken"
+      };
+      await User.create(user);
+
+      const res = await server.inject({
+        method: "GET",
+        url: "/users/12345678-1234-1234-1234-123456789012",
+        payload: {},
+        headers: {
+          authorization: "aValidToken"
+        }
+      });
+
+      should(res.statusCode).equal(403);
+    });
   });
 
   describe("## GET /users/{uuid}/events", () => {
-    it("should return the code 200 and an array containing the user events if the user exists", async () => {
+    it("should return the code 200 and an array containing the user events if the user exists and if the requestor is admin", async () => {
       const user = {
         uuid: "12345678-1234-1234-1234-123456789012",
         name: "anyName",
@@ -185,10 +231,33 @@ describe("# Users routes", () => {
 
       should(res.statusCode).equal(403);
     });
+
+    it("should return the code 403 if the requestor is not admin", async () => {
+      const user = {
+        uuid: "12345678-1234-1234-1234-123456789012",
+        name: "anyName",
+        password: "anyPassword",
+        email: "anyMail@gmail.com",
+        role: "standard",
+        token: "aValidToken"
+      };
+      await User.create(user);
+
+      const res = await server.inject({
+        method: "GET",
+        url: "/users/12345678-1234-1234-1234-123456789012/events",
+        payload: {},
+        headers: {
+          authorization: "aValidToken"
+        }
+      });
+
+      should(res.statusCode).equal(403);
+    });
   });
 
   describe("## POST /users", () => {
-    it("should return the code 200 and the user just created if the payload is properly field and the user doesn't already exists in the database", async () => {
+    it("should return the code 200 and the user just created if the payload is properly field and if the user doesn't already exists in the database and if the requestor is admin", async () => {
       const user = {
         uuid: "12345678-1234-1234-1234-123456789012",
         name: "anyName",
@@ -221,7 +290,7 @@ describe("# Users routes", () => {
       });
     });
 
-    it("should return the code 400 if the payload is not properly filled", async () => {
+    it("should return the code 400 if the payload is not properly filled and if the requestor is admin", async () => {
       const user = {
         uuid: "12345678-1234-1234-1234-123456789012",
         name: "anyName",
@@ -244,7 +313,7 @@ describe("# Users routes", () => {
       should(res.statusCode).equal(400);
     });
 
-    it("should return the code 400 if the user already exist in the database", async () => {
+    it("should return the code 400 if the user already exist in the database and if the requestor is admin", async () => {
       const user = {
         uuid: "12345678-1234-1234-1234-123456789012",
         name: "anyName",
@@ -284,16 +353,44 @@ describe("# Users routes", () => {
 
       should(res.statusCode).equal(403);
     });
+
+    it("should return the code 403 if the requestor is not admin", async () => {
+      const user = {
+        uuid: "12345678-1234-1234-1234-123456789012",
+        name: "anyName",
+        password: "anyPassword",
+        email: "anyMail@gmail.com",
+        role: "standard",
+        token: "aValidToken"
+      };
+      await User.create(user);
+
+      const res = await server.inject({
+        method: "POST",
+        url: "/users",
+        payload: {
+          name: "anyName",
+          password: "anyPassword",
+          email: "anyMail@gmail.com",
+          role: "standard"
+        },
+        headers: {
+          authorization: "aValidToken"
+        }
+      });
+
+      should(res.statusCode).equal(403);
+    });
   });
 
   describe("## DELETE /users/{uuid}", () => {
-    it("should return the code 200 and the message '1' if the user has been successfully deleted", async () => {
+    it("should return the code 200 and the message '1' if the user has been successfully deleted and if the requestor is admin", async () => {
       const user = {
         uuid: "1753df50-9cbf-11e9-bf9b-6da555a523dd",
         name: "Chuck",
         password: "Norris",
         email: "myMail@gmail.com",
-        role: "standard",
+        role: "admin",
         token: "tok"
       };
       await User.create(user);
@@ -311,7 +408,7 @@ describe("# Users routes", () => {
       should(res.payload).equal("1");
     });
 
-    it("should return the code 200 and the message '0' if the user doesn't exist in the database", async () => {
+    it("should return the code 200 and the message '0' if the user doesn't exist in the database and if the requestor is admin", async () => {
       const user = {
         uuid: "12345678-1234-1234-1234-123456789012",
         name: "anyName",
@@ -342,6 +439,29 @@ describe("# Users routes", () => {
         payload: {},
         headers: {
           authorization: "toto"
+        }
+      });
+
+      should(res.statusCode).equal(403);
+    });
+
+    it("should return the code 403 if the requestor is not admin", async () => {
+      const user = {
+        uuid: "12345678-1234-1234-1234-123456789012",
+        name: "anyName",
+        password: "anyPassword",
+        email: "anyMail@gmail.com",
+        role: "standard",
+        token: "aValidToken"
+      };
+      await User.create(user);
+
+      const res = await server.inject({
+        method: "DELETE",
+        url: "/users/12345678-1234-1234-1234-123456789012",
+        payload: {},
+        headers: {
+          authorization: "aValidToken"
         }
       });
 
