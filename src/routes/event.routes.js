@@ -88,12 +88,6 @@ module.exports = [
           id: Joi.number()
             .integer()
             .required()
-        },
-        headers: {
-          authorization: Joi.string().required()
-        },
-        options: {
-          allowUnknown: true
         }
       }
     }
