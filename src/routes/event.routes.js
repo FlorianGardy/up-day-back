@@ -1,27 +1,38 @@
 const Event = require("../db/event/event.model");
 const Joi = require("@hapi/joi");
+const Boom = require("@hapi/boom");
+const User = require("../db/user/user.model");
 
 module.exports = [
   {
     method: "GET",
     path: "/events",
-    handler: async function() {
+    handler: async function(request, h) {
+      const isAdmin = await User.findOne({
+        where: { uuid: request.auth.credentials.uuid, role: "admin" }
+      });
       try {
-        return await Event.findAll();
+        return isAdmin
+          ? await Event.findAll({ order: [["date", "ASC"]] })
+          : await Event.findAll({
+              where: { uuid: request.auth.credentials.uuid },
+              order: [["date", "ASC"]]
+            });
       } catch (err) {
         console.log(err);
       }
     }
   },
+
   {
     method: "GET",
     path: "/events/{uuid}",
-    handler: async function(request) {
+    handler: async function(request, h) {
       try {
-        const uuid = request.params.uuid;
+        const { uuid } = request.params;
         return await Event.findAll({
           where: {
-            uuid: uuid
+            uuid
           }
         });
       } catch (err) {
@@ -36,11 +47,17 @@ module.exports = [
       }
     }
   },
+
   {
     method: "POST",
     path: "/events",
     handler: async function(request, h) {
       try {
+        // If the uuid from the payload is different from the the one from the token, throw error 400
+        if (request.auth.credentials.uuid !== request.payload.uuid) {
+          return Boom.badRequest("invalid uuid");
+        }
+
         if (request.payload.context || request.payload.context === "") {
           request.payload = {
             ...request.payload,
@@ -66,12 +83,23 @@ module.exports = [
       }
     }
   },
+
   {
     method: "DELETE",
     path: "/events/{id}",
     handler: async function(request, h) {
       try {
         const eventId = request.params.id;
+
+        // If the uuid of the event to delete is different from the the one from the token, throw error 400
+        const eventToDelete = await Event.findOne({ where: { id: eventId } });
+        if (
+          eventToDelete &&
+          request.auth.credentials.uuid !== eventToDelete.uuid
+        ) {
+          return Boom.badRequest("invalid uuid");
+        }
+
         return await Event.destroy({
           where: {
             id: eventId
