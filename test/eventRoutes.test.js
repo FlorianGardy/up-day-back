@@ -159,7 +159,7 @@ describe("# Events routes", () => {
   });
 
   describe("## POST /events", () => {
-    it("should return the code 200 and sends the payload back if the payload is properly filled and the uuid corresponding to the token is the same as the one in the payload", async () => {
+    it("should return the code 200 and sends the payload back if the payload is properly filled", async () => {
       const user = {
         uuid: "066a5380-a247-11e9-98bb-cdf025799f94",
         name: "Chuck",
@@ -176,8 +176,7 @@ describe("# Events routes", () => {
         nature: "normale",
         volume: "+++",
         context: "fuite|urgence",
-        comment: "pipi",
-        uuid: "066a5380-a247-11e9-98bb-cdf025799f94"
+        comment: "pipi"
       };
       const res = await server.inject({
         method: "POST",
@@ -193,47 +192,6 @@ describe("# Events routes", () => {
         ...event,
         context: event.context.split("|")
       });
-    });
-
-    it("should return the code 400 if the uuid corresponding to the token is different from the one in the payload", async () => {
-      const user1 = {
-        uuid: "12345678-1234-1234-1234-123456789012",
-        name: "Chuck",
-        password: "Norris",
-        email: "myMail@gmail.com",
-        role: "standard",
-        token: "tok1"
-      };
-      const user2 = {
-        uuid: "23144200-a195-11e9-be71-915c08fe32a4",
-        name: "Patrick",
-        password: "Sebastien",
-        email: "myMail@gmail.com",
-        role: "standard",
-        token: "tok2"
-      };
-      await User.create(user1);
-      await User.create(user2);
-
-      const event = {
-        date: "2019-06-04T12:59:00.000Z",
-        type: "pipi",
-        nature: "normale",
-        volume: "+++",
-        context: "fuite|urgence",
-        comment: "pipi",
-        uuid: "12345678-1234-1234-1234-123456789012"
-      };
-      const res = await server.inject({
-        method: "POST",
-        url: "/events",
-        payload: event,
-        headers: {
-          authorization: "tok2"
-        }
-      });
-
-      should(res.statusCode).equal(400);
     });
 
     it("should return the code 400 if the payload is not properly filled", async () => {
