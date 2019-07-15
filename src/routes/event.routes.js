@@ -25,30 +25,6 @@ module.exports = [
   },
 
   {
-    method: "GET",
-    path: "/events/{uuid}",
-    handler: async function(request, h) {
-      try {
-        const { uuid } = request.params;
-        return await Event.findAll({
-          where: {
-            uuid
-          }
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    options: {
-      validate: {
-        params: {
-          uuid: Joi.string().required()
-        }
-      }
-    }
-  },
-
-  {
     method: "POST",
     path: "/events",
     handler: async function(request, h) {
