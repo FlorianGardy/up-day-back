@@ -8,8 +8,8 @@ const User = require("./db/user/user.model");
 const initDatabase = require("./db/initDatabase");
 
 const server = Hapi.server({
-  port: 3030,
-  host: "localhost",
+  port: process.env.SERVER_PORT,
+  host: process.env.SERVER_HOST,
   routes: {
     cors: true
   }
