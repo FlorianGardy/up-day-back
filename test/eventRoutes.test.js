@@ -175,7 +175,7 @@ describe("# Events routes", () => {
         type: "pipi",
         nature: "normale",
         volume: "+++",
-        context: "fuite|urgence",
+        context: ["fuite", "urgence"],
         comment: "pipi"
       };
       const res = await server.inject({
@@ -188,10 +188,7 @@ describe("# Events routes", () => {
       });
 
       should(res.statusCode).equal(200);
-      should(JSON.parse(res.payload)).match({
-        ...event,
-        context: event.context.split("|")
-      });
+      should(JSON.parse(res.payload)).match(event);
     });
 
     it("should return the code 400 if the payload is not properly filled", async () => {

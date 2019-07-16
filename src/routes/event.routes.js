@@ -31,13 +31,6 @@ module.exports = [
           uuid: request.auth.credentials.uuid
         };
 
-        if (request.payload.context || request.payload.context === "") {
-          eventToCreate = {
-            ...eventToCreate,
-            context: request.payload.context.split("|")
-          };
-        }
-
         return await Event.create(eventToCreate);
       } catch (err) {
         console.log(err);
