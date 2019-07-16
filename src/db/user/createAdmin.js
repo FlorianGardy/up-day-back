@@ -1,6 +1,5 @@
 const { User, USER_ROLES } = require("./user.model");
 const jwt = require("jsonwebtoken");
-const uuidv1 = require("uuid/v1");
 const bcrypt = require("bcrypt");
 
 async function createAdmin() {

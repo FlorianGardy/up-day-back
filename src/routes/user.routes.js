@@ -2,7 +2,6 @@ const Joi = require("@hapi/joi");
 const Boom = require("@hapi/boom");
 const { User, USER_ROLES } = require("../db/user/user.model");
 const jwt = require("jsonwebtoken");
-const uuidv1 = require("uuid/v1");
 const bcrypt = require("bcrypt");
 
 function isAdmin(request) {
