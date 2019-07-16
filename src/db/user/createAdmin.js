@@ -14,9 +14,6 @@ async function createAdmin() {
     const email = "admin@upday.com";
     const role = USER_ROLES.ADMIN;
 
-    // Build uuid
-    const uuid = uuidv1();
-
     // build password
     const saltRounds = 10;
     let password = await bcrypt.hash(rawPassword, saltRounds);
@@ -28,7 +25,6 @@ async function createAdmin() {
     );
 
     const user = {
-      uuid,
       name,
       password,
       role,

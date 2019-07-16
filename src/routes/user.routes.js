@@ -40,17 +40,7 @@ module.exports = [
           return Boom.forbidden("Admin only !!");
         }
 
-        return await User.findOne({
-          attributes: [
-            "uuid",
-            "name",
-            "email",
-            "role",
-            "createdAt",
-            "updatedAt"
-          ],
-          where: { uuid }
-        });
+        return await User.findOne({ where: { uuid } });
       } catch (err) {
         console.log(err);
       }
@@ -101,22 +91,18 @@ module.exports = [
           return h.response(nameExistMessage).code(400);
         }
 
-        // Generates UUID (Universal Unique Identifier)
-        const uuid = uuidv1();
-
         // Generates hashed password
         const saltRounds = 10;
         let password = await bcrypt.hash(rawPassword, saltRounds);
 
         // Generates JSON Web Token
         const token = await jwt.sign(
-          { uuid, name, password, email },
+          { name, password, email },
           process.env.SERVER_JWT_SECRET
         );
 
         // Creates a new user in DB
         const user = {
-          uuid,
           name,
           password,
           email,
