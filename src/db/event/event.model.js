@@ -1,6 +1,5 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../connect");
-const User = require("../user/user.model");
 
 const Event = sequelize.define(
   "event",

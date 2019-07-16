@@ -1,6 +1,6 @@
 const should = require("should");
 const { init } = require("../src/server");
-const User = require("../src/db/user/user.model");
+const { User } = require("../src/db/user/user.model");
 const Event = require("../src/db/event/event.model");
 
 describe("# Users routes", () => {

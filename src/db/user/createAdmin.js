@@ -1,4 +1,4 @@
-const User = require("./user.model");
+const { User, USER_ROLES } = require("./user.model");
 const jwt = require("jsonwebtoken");
 const uuidv1 = require("uuid/v1");
 const bcrypt = require("bcrypt");
@@ -12,7 +12,7 @@ async function createAdmin() {
     const name = "admin";
     const rawPassword = "admin";
     const email = "admin@upday.com";
-    const role = "admin";
+    const role = USER_ROLES.ADMIN;
 
     // Build uuid
     const uuid = uuidv1();

@@ -1,13 +1,13 @@
 const Joi = require("@hapi/joi");
 const Boom = require("@hapi/boom");
-const User = require("../db/user/user.model");
+const { User, USER_ROLES } = require("../db/user/user.model");
 const jwt = require("jsonwebtoken");
 const uuidv1 = require("uuid/v1");
 const bcrypt = require("bcrypt");
 
 function isAdmin(request) {
   return User.findOne({
-    where: { uuid: request.auth.credentials.uuid, role: "admin" }
+    where: { uuid: request.auth.credentials.uuid, role: USER_ROLES.ADMIN }
   });
 }
 
@@ -134,7 +134,7 @@ module.exports = [
           name: Joi.string().required(),
           password: Joi.string().required(),
           email: [Joi.string(), Joi.any().allow(null)],
-          role: Joi.valid(["standard", "admin"]).required()
+          role: Joi.valid([USER_ROLES.STANDARD, USER_ROLES.ADMIN]).required()
         }
       }
     }

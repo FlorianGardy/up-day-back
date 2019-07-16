@@ -4,7 +4,7 @@ require("dotenv").config();
 var cors = require("cors");
 const Hapi = require("@hapi/hapi");
 
-const User = require("./db/user/user.model");
+const { User } = require("./db/user/user.model");
 const initDatabase = require("./db/initDatabase");
 
 const server = Hapi.server({

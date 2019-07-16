@@ -1,6 +1,11 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../connect");
 
+const USER_ROLES = {
+  ADMIN: "admin",
+  STANDARD: "standard"
+};
+
 const User = sequelize.define(
   "user",
   {
@@ -24,7 +29,7 @@ const User = sequelize.define(
       allowNull: true
     },
     role: {
-      type: Sequelize.ENUM("admin", "standard"),
+      type: Sequelize.ENUM(USER_ROLES.ADMIN, USER_ROLES.STANDARD),
       allowNull: false
     },
     token: {
@@ -37,4 +42,4 @@ const User = sequelize.define(
   }
 );
 
-module.exports = User;
+module.exports = { User, USER_ROLES };

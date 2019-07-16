@@ -1,7 +1,7 @@
 const Event = require("../db/event/event.model");
 const Joi = require("@hapi/joi");
 const Boom = require("@hapi/boom");
-const User = require("../db/user/user.model");
+const { USER_ROLES } = require("../db/user/user.model");
 
 module.exports = [
   {
@@ -9,7 +9,7 @@ module.exports = [
     path: "/events",
     handler: async function(request, h) {
       try {
-        return request.auth.credentials.role === "admin"
+        return request.auth.credentials.role === USER_ROLES.ADMIN
           ? await Event.findAll({ order: [["date", "ASC"]] })
           : await Event.findAll({
               where: { uuid: request.auth.credentials.uuid },
