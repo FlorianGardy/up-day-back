@@ -9,7 +9,6 @@ const initDatabase = require("./db/initDatabase");
 
 const server = Hapi.server({
   port: process.env.SERVER_PORT,
-  host: process.env.SERVER_HOST,
   routes: {
     cors: true
   }
