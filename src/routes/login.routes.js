@@ -1,6 +1,6 @@
 const Joi = require("@hapi/joi");
 const bcrypt = require("bcrypt");
-const User = require("../db/user/user.model");
+const { User } = require("../db/user/user.model");
 
 module.exports = [
   {

@@ -1,18 +1,15 @@
 const Event = require("../db/event/event.model");
 const Joi = require("@hapi/joi");
 const Boom = require("@hapi/boom");
-const User = require("../db/user/user.model");
+const { USER_ROLES } = require("../db/user/user.model");
 
 module.exports = [
   {
     method: "GET",
     path: "/events",
     handler: async function(request, h) {
-      const isAdmin = await User.findOne({
-        where: { uuid: request.auth.credentials.uuid, role: "admin" }
-      });
       try {
-        return isAdmin
+        return request.auth.credentials.role === USER_ROLES.ADMIN
           ? await Event.findAll({ order: [["date", "ASC"]] })
           : await Event.findAll({
               where: { uuid: request.auth.credentials.uuid },
@@ -29,18 +26,12 @@ module.exports = [
     path: "/events",
     handler: async function(request, h) {
       try {
-        // If the uuid from the payload is different from the the one from the token, throw error 400
-        if (request.auth.credentials.uuid !== request.payload.uuid) {
-          return Boom.badRequest("invalid uuid");
-        }
+        let eventToCreate = {
+          ...request.payload,
+          uuid: request.auth.credentials.uuid
+        };
 
-        if (request.payload.context || request.payload.context === "") {
-          request.payload = {
-            ...request.payload,
-            context: request.payload.context.split("|")
-          };
-        }
-        return await Event.create(request.payload);
+        return await Event.create(eventToCreate);
       } catch (err) {
         console.log(err);
       }
@@ -53,8 +44,7 @@ module.exports = [
           nature: Joi.string().required(),
           volume: Joi.string().required(),
           context: [Joi.string(), Joi.any().allow(null)],
-          comment: [Joi.string(), Joi.any().allow(null)],
-          uuid: Joi.string().required()
+          comment: [Joi.string(), Joi.any().allow(null)]
         }
       }
     }

@@ -14,7 +14,7 @@ async function initDatabase({ testConnection, clearTables, checkAdmin }) {
   }
 
   // Model definition
-  const User = await require("./user/user.model");
+  const { User } = await require("./user/user.model");
   const Event = await require("./event/event.model");
   Event.belongsTo(User, { foreignKey: "uuid", targetKey: "uuid" });
   User.hasMany(Event, { foreignKey: "uuid", sourceKey: "uuid" });

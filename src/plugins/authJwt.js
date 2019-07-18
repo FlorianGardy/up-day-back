@@ -8,9 +8,11 @@ const scheme = function(server, { validate }) {
       if (!token) {
         return h.unauthenticated(Boom.forbidden("Missing token"));
       }
-      const uuid = await validate(token);
-      if (uuid) {
-        return h.authenticated({ credentials: { token, uuid } });
+      const user = await validate(token);
+
+      if (user) {
+        const { token, uuid, role } = user;
+        return h.authenticated({ credentials: { token, uuid, role } });
       } else {
         return h.unauthenticated(Boom.forbidden("Invalid token"));
       }

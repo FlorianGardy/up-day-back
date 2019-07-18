@@ -4,12 +4,12 @@ require("dotenv").config();
 var cors = require("cors");
 const Hapi = require("@hapi/hapi");
 
-const User = require("./db/user/user.model");
+const { User } = require("./db/user/user.model");
 const initDatabase = require("./db/initDatabase");
 
 const server = Hapi.server({
-  port: 3030,
-  host: "localhost",
+  port: process.env.SERVER_PORT,
+  host: process.env.SERVER_HOST,
   routes: {
     cors: true
   }
@@ -22,8 +22,7 @@ async function registerPlugins() {
     options: {
       validate: async token => {
         try {
-          const user = await User.findOne({ where: { token } });
-          if (user) return user.uuid;
+          return await User.findOne({ where: { token } });
         } catch (error) {
           console.log(error);
         }

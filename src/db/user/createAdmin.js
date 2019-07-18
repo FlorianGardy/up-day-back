@@ -1,6 +1,5 @@
-const User = require("./user.model");
+const { User, USER_ROLES } = require("./user.model");
 const jwt = require("jsonwebtoken");
-const uuidv1 = require("uuid/v1");
 const bcrypt = require("bcrypt");
 
 async function createAdmin() {
@@ -12,10 +11,7 @@ async function createAdmin() {
     const name = "admin";
     const rawPassword = "admin";
     const email = "admin@upday.com";
-    const role = "admin";
-
-    // Build uuid
-    const uuid = uuidv1();
+    const role = USER_ROLES.ADMIN;
 
     // build password
     const saltRounds = 10;
@@ -28,7 +24,6 @@ async function createAdmin() {
     );
 
     const user = {
-      uuid,
       name,
       password,
       role,
