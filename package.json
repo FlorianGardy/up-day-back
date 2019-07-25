@@ -29,14 +29,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WildCodeSchool/biarritz_0319_kine_back.git"
+    "url": "git+https://github.com/FlorianGardy/up-day-back.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/WildCodeSchool/biarritz_0319_kine_back/issues"
+    "url": "https://github.com/FlorianGardy/up-day-back/issues"
   },
-  "homepage": "https://github.com/WildCodeSchool/biarritz_0319_kine_back#readme",
+  "homepage": "https://github.com/FlorianGardy/up-day-back#readme",
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged && npm test"
